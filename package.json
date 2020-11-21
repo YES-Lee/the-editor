@@ -1,0 +1,15 @@
+{
+  "name": "the-editor",
+  "version": "0.0.1",
+  "description": "a markdown editor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "markdown",
+    "editor"
+  ],
+  "author": "Johnson",
+  "license": "MIT"
+}
