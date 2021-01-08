@@ -1,0 +1,25 @@
+@import 'functions';
+
+.the_editor {
+  border: 1px solid get-var(border-color);
+  border-radius: 2px;
+  overflow: hidden;
+  width: 900px;
+  height: 500px;
+  overflow: hidden;
+  position: relative;
+
+  &.the_editor_width_toolbar {
+    padding-top: get-var(toolbar-height);
+  }
+
+  &.the_editor_width_previewer {
+    display: flex;
+    flex-flow: row nowrap;
+
+    .CodeMirror {
+      flex: 1;
+      height: 100%;
+    }
+  }
+}

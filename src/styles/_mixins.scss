@@ -1,0 +1,9 @@
+@import 'functions';
+
+@mixin set-vars($vars) {
+  :root {
+    @each $key, $value in $vars {
+      #{get-var-name($key)}: $value;
+    }
+  }
+}

@@ -1,0 +1,11 @@
+@import 'mixins';
+@import './editor.scss';
+@import './previewer.scss';
+@import './toolbar.scss';
+
+$vars: (
+  border-color: #ddd,
+  toolbar-height: 42px
+);
+
+@include set-vars($vars);

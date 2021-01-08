@@ -1,0 +1,12 @@
+@import 'functions';
+
+.the_editor--toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: get-var(toolbar-height);
+  line-height: get-var(toolbar-height);
+  box-sizing: border-box;
+  border-bottom: 1px solid get-var(border-color);
+  width: 100%;
+}

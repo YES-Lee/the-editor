@@ -1,0 +1,10 @@
+@import 'functions';
+@import '~github-markdown-css/github-markdown';
+
+.the_editor--previewer {
+  flex: 1;
+  border-left: 1px solid get-var(border-color);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem;
+}

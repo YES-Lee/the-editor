@@ -1,0 +1,7 @@
+@function get-var-name($name) {
+  @return '--the-editor-#{$name}';
+}
+
+@function get-var($name) {
+  @return var(#{get-var-name($name)});
+}
