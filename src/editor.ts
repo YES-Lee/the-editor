@@ -17,6 +17,7 @@ export type Options = {
   value?: string;
   lineNumbers?: boolean;
   tabSize?: number;
+  imageUploadAdaptor?: ImageUploadAdaptor;
 }
 
 export type TOC = Array<{
@@ -26,6 +27,10 @@ export type TOC = Array<{
   level: number;
 }>;
 
+export interface ImageUploadAdaptor {
+  upload(images: File[]): string[] | Promise<string[]>;
+}
+
 export class TheEditor {
   static defaultOptions: Options = {
     lineNumbers: true,
@@ -34,9 +39,10 @@ export class TheEditor {
   }
   private eventListeners: { [key: string]: any } = {};
   private codemirrorEditor: Codemirror.Editor;
+  options: Options;
   host: HTMLElement;
-  toolbar: Toolbar;
-  previewer: Previewer;
+  toolbar?: Toolbar;
+  previewer?: Previewer;
   /**
    * The Editor构造函数
    * @param host 宿主元素
@@ -45,20 +51,20 @@ export class TheEditor {
   constructor(host: HTMLElement, options?: Options) {
     this.host = host;
     host.classList.add('the_editor')
-    const opts = { ...TheEditor.defaultOptions, ...options }
+    this.options = { ...TheEditor.defaultOptions, ...options }
 
     this.codemirrorEditor = Codemirror(host, {
-      mode: opts.gfm ? 'gfm' : 'markdown',
-      lineNumbers: opts?.lineNumbers,
-      tabSize: opts?.tabSize,
+      mode: this.options.gfm ? 'gfm' : 'markdown',
+      lineNumbers: this.options?.lineNumbers,
+      tabSize: this.options?.tabSize,
       indentWithTabs: true,
       lineWrapping: true,
-      foldGutter: opts?.lineNumbers,
-      gutters: opts?.lineNumbers ? ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'] : [],
-      value: opts?.value || ''
+      foldGutter: this.options?.lineNumbers,
+      gutters: this.options?.lineNumbers ? ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'] : [],
+      value: this.options?.value || ''
     });
 
-    this.toolbar = new Toolbar(this);
+    // this.toolbar = new Toolbar(this);
     this.previewer = new Previewer(this)
 
     this.emit('change', this.codemirrorEditor.getValue())
@@ -71,7 +77,39 @@ export class TheEditor {
       this.emit('scroll', editor.getScrollInfo());
     })
 
-    this.codemirrorEditor.scrollTo()
+    this.codemirrorEditor.on('paste', (editor, event) => {
+      if (!event.clipboardData) {
+        return
+      }
+      const types = event.clipboardData.types
+      if (types.length > 1 || !types.includes('Files')) {
+        // 粘贴内容中包含文件以外的其他类型数据，则不处理图片
+        return
+      }
+      const images = Array.from(event.clipboardData.files).filter(f => /image\/.*/gi.test(f.type))
+      if (!images.length) {
+        return
+      }
+      if (!this.options.imageUploadAdaptor) {
+        console.warn('[The Editor] 请在选项中提供imageUploadAdaptor')
+        return
+      }
+      event.preventDefault()
+      editor.execCommand('newlineAndIndent')
+      const startCursor = editor.getCursor()
+      editor.replaceSelection('![正在上传...](...)')
+      const endCursor = editor.getCursor()
+      const res = this.options.imageUploadAdaptor.upload(images)
+      const appendImages = (urls: string[]) => {
+        const str = urls.map(u => `![](${u})`).join('\n')
+        editor.replaceRange(str, startCursor, endCursor)
+      }
+      if (res instanceof Promise) {
+        res.then(appendImages)
+      } else {
+        appendImages(res)
+      }
+    })
   }
 
   on(event: 'change', handler: (value: string) => void): void;
@@ -113,14 +151,14 @@ export class TheEditor {
    * 设置markdown内容
    * @param markdown markdown文本
    */
-  setMarkdown(markdown: string): void {
+  setValue(markdown: string): void {
     this.codemirrorEditor.setValue(markdown);
   }
 
   /**
    * 获取markdown内容
    */
-  getMarkdown(): string {
+  getValue(): string {
     return this.codemirrorEditor.getValue();
   }
 

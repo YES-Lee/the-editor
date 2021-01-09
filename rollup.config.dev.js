@@ -53,7 +53,16 @@ export default {
                     var container = document.getElementById('editor')
                     var editor = new TheEditor(container, {
                       value: document.getElementById('md').innerText,
-                      lineNumbers: true
+                      lineNumbers: true,
+                      imageUploadAdaptor: {
+                        upload() {
+                          return new Promise(res => {
+                            setTimeout(() => {
+                              res(['https://johnsonlee.site/static/4e277f419b794d47cdd83438047befc4/49aae/cover.jpg', 'https://johnsonlee.site/static/4e277f419b794d47cdd83438047befc4/49aae/cover.jpg'])
+                            }, 1000)
+                          })
+                        }
+                      }
                     })
                   }
                 })()

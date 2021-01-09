@@ -7,3 +7,21 @@
     }
   }
 }
+
+@mixin scroll-bar {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background-color: rgba(0,0,0,0.1);
+  }
+
+  ::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,.3);
+    border-radius: 6px;
+  }
+}

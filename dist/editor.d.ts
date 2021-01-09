@@ -13,6 +13,7 @@ export declare type Options = {
     value?: string;
     lineNumbers?: boolean;
     tabSize?: number;
+    imageUploadAdaptor?: ImageUploadAdaptor;
 };
 export declare type TOC = Array<{
     id: string;
@@ -20,13 +21,17 @@ export declare type TOC = Array<{
     parent: string;
     level: number;
 }>;
+export interface ImageUploadAdaptor {
+    upload(images: File[]): string[] | Promise<string[]>;
+}
 export declare class TheEditor {
     static defaultOptions: Options;
     private eventListeners;
     private codemirrorEditor;
+    options: Options;
     host: HTMLElement;
-    toolbar: Toolbar;
-    previewer: Previewer;
+    toolbar?: Toolbar;
+    previewer?: Previewer;
     /**
      * The Editor构造函数
      * @param host 宿主元素
@@ -43,11 +48,11 @@ export declare class TheEditor {
      * 设置markdown内容
      * @param markdown markdown文本
      */
-    setMarkdown(markdown: string): void;
+    setValue(markdown: string): void;
     /**
      * 获取markdown内容
      */
-    getMarkdown(): string;
+    getValue(): string;
     /**
      * 获取html文本
      */
