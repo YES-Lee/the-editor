@@ -8,22 +8,7 @@ import { Toolbar } from './toolbar';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/addon/fold/foldgutter.css';
 import './styles/index.scss';
-export declare type Options = {
-    gfm?: boolean;
-    value?: string;
-    lineNumbers?: boolean;
-    tabSize?: number;
-    imageUploadAdaptor?: ImageUploadAdaptor;
-};
-export declare type TOC = Array<{
-    id: string;
-    title: string;
-    parent: string;
-    level: number;
-}>;
-export interface ImageUploadAdaptor {
-    upload(images: File[]): string[] | Promise<string[]>;
-}
+import type { Options, TOC } from './types';
 export declare class TheEditor {
     static defaultOptions: Options;
     private eventListeners;

@@ -12,6 +12,6 @@
     "strict": true, /* 启用严格模式 */
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src/index.ts"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist", "dev"]
 }
