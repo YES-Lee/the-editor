@@ -9,8 +9,7 @@ export type Options = {
 }
 
 export type TOC = Array<{
-  id: string;
-  title: string;
-  parent: string;
+  anchor: string;
+  text: string;
   level: number;
 }>;

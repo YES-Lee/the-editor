@@ -13,6 +13,8 @@ export declare class TheEditor {
     static defaultOptions: Options;
     private eventListeners;
     private codemirrorEditor;
+    private toc;
+    private html;
     options: Options;
     host: HTMLElement;
     toolbar?: Toolbar;
@@ -46,4 +48,5 @@ export declare class TheEditor {
      * 获取TOC
      */
     getTOC(): TOC;
+    private updateHTML;
 }

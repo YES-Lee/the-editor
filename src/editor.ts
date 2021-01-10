@@ -7,6 +7,7 @@ import { Previewer } from './previewer'
 import { Toolbar } from './toolbar'
 
 import marked from 'marked';
+import hljs from 'highlight.js'
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/addon/fold/foldgutter.css';
@@ -21,6 +22,8 @@ export class TheEditor {
   }
   private eventListeners: { [key: string]: any } = {};
   private codemirrorEditor: Codemirror.Editor;
+  private toc: TOC = [];
+  private html: string = '';
   options: Options;
   host: HTMLElement;
   toolbar?: Toolbar;
@@ -35,6 +38,33 @@ export class TheEditor {
     host.classList.add('the_editor')
     this.options = { ...TheEditor.defaultOptions, ...options }
 
+    const renderer = new marked.Renderer()
+    const that = this;
+    renderer.heading = function(text, level, raw) {
+      const anchor = this.options.headerPrefix + raw.toLowerCase().replace(/[^\w]+/g, '-');
+      that.toc.push({
+        anchor,
+        level,
+        text
+      })
+      return `<h${level} id="${anchor}">${text}</h${level}>`
+    }
+
+    marked.setOptions({
+      renderer,
+      gfm: this.options.gfm,
+      highlight: (code, language) => {
+        const validLanguage = hljs.getLanguage(language) ? language : 'plaintext';
+        return hljs.highlight(validLanguage, code).value;
+      },
+      pedantic: false,
+      breaks: false,
+      sanitize: false,
+      smartLists: true,
+      smartypants: false,
+      xhtml: false
+    })
+
     this.codemirrorEditor = Codemirror(host, {
       mode: this.options.gfm ? 'gfm' : 'markdown',
       lineNumbers: this.options?.lineNumbers,
@@ -45,6 +75,7 @@ export class TheEditor {
       gutters: this.options?.lineNumbers ? ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'] : [],
       value: this.options?.value || ''
     });
+    this.updateHTML();
 
     // this.toolbar = new Toolbar(this);
     this.previewer = new Previewer(this)
@@ -52,6 +83,7 @@ export class TheEditor {
     this.emit('change', this.codemirrorEditor.getValue())
 
     this.codemirrorEditor.on('change', (editor) => {
+      this.updateHTML();
       this.emit('change', editor.getValue())
     })
 
@@ -148,14 +180,18 @@ export class TheEditor {
    * 获取html文本
    */
   getHTML(): string {
-    return marked(this.codemirrorEditor.getValue());
+    return this.html;
   }
 
   /**
    * 获取TOC
    */
   getTOC(): TOC {
-    // TODO
-    return [];
+    return this.toc;
+  }
+
+  private updateHTML(): void {
+    this.toc = [];
+    this.html = marked(this.codemirrorEditor.getValue())
   }
 }

@@ -1,11 +1,9 @@
 import typescript from 'rollup-plugin-typescript2'
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import pkg from './package.json'
 import postcss from 'rollup-plugin-postcss'
-import html from '@rollup/plugin-html'
+import copy from 'rollup-plugin-copy'
 import serve from 'rollup-plugin-serve'
-import fs from 'fs'
 
 export default {
   input: 'src/index.ts', // 入口文件
@@ -16,6 +14,13 @@ export default {
     name: 'TheEditor'
   },
   plugins: [
+    copy({
+      targets: [
+        {
+          src: 'index.html', dest: 'dev/'
+        }
+      ]
+    }),
     postcss({
       extensions: ['.scss', '.css'],
       use: ['sass'],
@@ -30,47 +35,6 @@ export default {
         }
       },
       useTsconfigDeclarationDir: true
-    }),
-    html({
-      template: ({ attributes, bundle, files, publicPath, title }) => {
-        const md = fs.readFileSync('src/sample.md', { encoding: 'utf-8' })
-        return `
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <meta charset="UTF-8">
-              <title>The Editor</title>
-              <link rel="stylesheet" href="the-editor.css">
-            </head>
-            <body>
-              <div id="editor" style="margin: 100px auto; max-width: 1080px; width: 100%">
-                <textarea id="md" style="display: none">${md}</textarea>
-              </div>
-              <script src="the-editor.js"></script>
-              <script>
-                (function () {
-                  window.onload = function() {
-                    var container = document.getElementById('editor')
-                    var editor = new TheEditor(container, {
-                      value: document.getElementById('md').innerText,
-                      lineNumbers: true,
-                      imageUploadAdaptor: {
-                        upload() {
-                          return new Promise(res => {
-                            setTimeout(() => {
-                              res(['https://johnsonlee.site/static/4e277f419b794d47cdd83438047befc4/49aae/cover.jpg', 'https://johnsonlee.site/static/4e277f419b794d47cdd83438047befc4/49aae/cover.jpg'])
-                            }, 1000)
-                          })
-                        }
-                      }
-                    })
-                  }
-                })()
-              </script>
-            </body>
-          </html>
-        `
-      }
     }),
     serve('dev')
   ]

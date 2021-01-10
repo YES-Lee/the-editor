@@ -7,8 +7,7 @@ export declare type Options = {
     imageUploadAdaptor?: ImageUploadAdaptor;
 };
 export declare type TOC = Array<{
-    id: string;
-    title: string;
-    parent: string;
+    anchor: string;
+    text: string;
     level: number;
 }>;
