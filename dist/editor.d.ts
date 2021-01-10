@@ -5,10 +5,8 @@ import 'codemirror/mode/markdown/markdown';
 import 'codemirror/mode/gfm/gfm';
 import { Previewer } from './previewer';
 import { Toolbar } from './toolbar';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/addon/fold/foldgutter.css';
-import './styles/index.scss';
 import type { Options, TOC } from './types';
+import './styles/index.scss';
 export declare class TheEditor {
     static defaultOptions: Options;
     private eventListeners;

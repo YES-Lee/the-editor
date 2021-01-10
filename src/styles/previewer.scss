@@ -1,5 +1,9 @@
 @import 'functions';
-@import '~github-markdown-css/github-markdown';
+
+.the_editor {
+  @import '~highlight.js/scss/xcode';
+  @import '~github-markdown-css/github-markdown';
+}
 
 .the_editor--previewer {
   flex: 1;

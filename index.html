@@ -7,9 +7,9 @@
   </head>
   <body>
     <div style="margin: 90px auto 0; text-align: center;">
-      <button>获取Markdown</button>
-      <button style="margin-left: 10px">获取HTML</button>
-      <button style="margin-left: 10px">获取TOC</button>
+      <button id="btn-get-markdown">获取Markdown</button>
+      <button id="btn-get-html" style="margin-left: 10px">获取HTML</button>
+      <button id="btn-get-toc" style="margin-left: 10px">获取TOC</button>
     </div>
     <div id="editor" style="margin: 20px auto; max-width: 1080px; width: 100%">
       <textarea id="md" style="display: none">
@@ -210,18 +210,29 @@ Reference-style:
             value: document.getElementById("md").innerText,
             lineNumbers: true,
             imageUploadAdaptor: {
-              upload() {
+              upload(files) {
                 return new Promise((res) => {
                   setTimeout(() => {
-                    res([
-                      "https://johnsonlee.site/static/4e277f419b794d47cdd83438047befc4/49aae/cover.jpg",
-                      "https://johnsonlee.site/static/4e277f419b794d47cdd83438047befc4/49aae/cover.jpg",
-                    ]);
+                    res(files.map(f => URL.createObjectURL(f)));
                   }, 1000);
                 });
               },
             },
           });
+
+          var getMarkdownButton = document.getElementById('btn-get-markdown')
+          var getHTMLButton = document.getElementById('btn-get-html')
+          var getTOCButton = document.getElementById('btn-get-toc')
+
+          getMarkdownButton.addEventListener('click', () => {
+            window.alert(editor.getValue())
+          })
+          getHTMLButton.addEventListener('click', () => {
+            window.alert(editor.getHTML())
+          })
+          getTOCButton.addEventListener('click', () => {
+            window.alert(JSON.stringify(editor.getTOC(), null, 2))
+          })
         };
       })();
     </script>

@@ -9,10 +9,9 @@ import { Toolbar } from './toolbar'
 import marked from 'marked';
 import hljs from 'highlight.js'
 
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/addon/fold/foldgutter.css';
-import './styles/index.scss';
 import type { Options, TOC } from './types';
+
+import './styles/index.scss';
 
 export class TheEditor {
   static defaultOptions: Options = {

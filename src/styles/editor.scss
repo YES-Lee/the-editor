@@ -2,6 +2,8 @@
 @import 'mixins';
 
 .the_editor {
+  @import '~codemirror/lib/codemirror';
+  @import '~codemirror/addon/fold/foldgutter';
   border: 1px solid get-var(border-color);
   border-radius: 2px;
   overflow: hidden;
