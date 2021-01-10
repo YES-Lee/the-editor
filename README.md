@@ -74,3 +74,12 @@ export default {
 |value|string|null|markdown文本|
 |gfm|boolean|true|GitHub Flavoured Markdown|
 |lineNumbers|boolean|true|是否显示行号|
+
+## 实例方法
+
+|方法|参数|返回值|描述|
+|---|---|---|---|
+|setValue|string|void|设置markdown文本|
+|getValue||string|获取markdown文本|
+|getHTML||string|获取HTML文本|
+|getTOC||Array<{ anchor: string; text: string; level: number; }>|获取TOC|
