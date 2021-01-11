@@ -17,12 +17,25 @@ export class TheEditor {
   static defaultOptions: Options = {
     lineNumbers: true,
     tabSize: 2,
-    gfm: true
+    gfm: true,
+    toolbar: {
+      visible: true,
+      items: [
+        'undo', 'redo',
+        '|',
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        '|',
+        'bold', 'strikethrough', 'italic', 'quote',
+        '|',
+        'ul', 'ol', 'line',
+        '|'
+      ]
+    }
   }
   private eventListeners: { [key: string]: any } = {};
-  private codemirrorEditor: Codemirror.Editor;
   private toc: TOC = [];
   private html: string = '';
+  codemirrorEditor: Codemirror.Editor;
   options: Options;
   host: HTMLElement;
   toolbar?: Toolbar;
@@ -76,7 +89,9 @@ export class TheEditor {
     });
     this.updateHTML();
 
-    // this.toolbar = new Toolbar(this);
+    if (this.options.toolbar?.visible) {
+      this.toolbar = new Toolbar(this);
+    }
     this.previewer = new Previewer(this)
 
     this.emit('change', this.codemirrorEditor.getValue())

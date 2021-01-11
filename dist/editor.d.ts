@@ -1,4 +1,4 @@
-import { ScrollInfo } from 'codemirror';
+import Codemirror, { ScrollInfo } from 'codemirror';
 import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/markdown-fold';
 import 'codemirror/mode/markdown/markdown';
@@ -10,9 +10,9 @@ import './styles/index.scss';
 export declare class TheEditor {
     static defaultOptions: Options;
     private eventListeners;
-    private codemirrorEditor;
     private toc;
     private html;
+    codemirrorEditor: Codemirror.Editor;
     options: Options;
     host: HTMLElement;
     toolbar?: Toolbar;

@@ -5,8 +5,46 @@
   top: 0;
   left: 0;
   height: get-var(toolbar-height);
-  line-height: get-var(toolbar-height);
+  display: flex;
+  align-items: center;
+  flex-flow: row nowrap;
   box-sizing: border-box;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-bottom: 1px solid get-var(border-color);
   width: 100%;
+  padding: 0 8px;
+
+  .tool_item {
+    flex: none;
+    display: block;
+    box-sizing: border-box;
+    padding: 0 6px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #666;
+    border: 1px solid transparent;
+    text-align: center;
+    transition: all .1s ease-in-out;
+    user-select: none;
+    &:not(:first-child) {
+      margin-left: 2px;
+    }
+    &:hover {
+      color: blue;
+      border-color: get-var(border-color);
+      background: rgba($color: #666, $alpha: 0.1);
+    }
+  }
+
+  .tool_gutter {
+    display: block;
+    height: 24px;
+    width: 1px;
+    background-color: get-var(border-color);
+    margin-left: 2px;
+  }
 }

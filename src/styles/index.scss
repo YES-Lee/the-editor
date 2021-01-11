@@ -3,6 +3,12 @@
 @import './previewer.scss';
 @import './toolbar.scss';
 
+$fa-font-path: 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/webfonts';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+@import '~@fortawesome/fontawesome-free/scss/brands';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+
 $vars: (
   border-color: #ddd,
   toolbar-height: 42px
