@@ -28,7 +28,8 @@ export class TheEditor {
         'bold', 'strikethrough', 'italic', 'quote',
         '|',
         'ul', 'ol', 'line',
-        '|'
+        '|',
+        'preview'
       ]
     }
   }

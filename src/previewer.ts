@@ -4,9 +4,11 @@ import { TheEditor } from './editor';
 export class Previewer {
   private previewer: HTMLElement;
   private editor: TheEditor;
+  visible: boolean;
 
   constructor(editor: TheEditor) {
     this.editor = editor;
+    this.visible = true;
     const previewer = document.createElement('div')
     this.previewer = previewer;
     previewer.classList.add('the_editor--previewer', 'markdown-body')
@@ -37,5 +39,14 @@ export class Previewer {
       this.editor.on('scroll', onEditorScroll);
       this.previewer.removeEventListener('scroll', onPreviewerScroll);
     })
+  }
+
+  toggleVisible(): void {
+    this.visible = !this.visible;
+    if (this.visible) {
+      this.previewer.style.display = 'block';
+    } else {
+      this.previewer.style.display = 'none';
+    }
   }
 }

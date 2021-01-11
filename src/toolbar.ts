@@ -35,7 +35,7 @@ export class Toolbar {
           }
           if (typeof tool.action === 'function') {
             toolEl.addEventListener('click', () => {
-              tool.action(this.editor);
+              tool.action(this.editor, toolEl);
             })
           }
         }

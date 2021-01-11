@@ -2,7 +2,7 @@
 
 **The Editor**是一个极简`markdown`编辑器。仅提供了几个核心的基础API：`getValue`, `getHTML`, `getTOC`, `setValue`。配置选项也非常精简，能满足大部分的需求场景。
 
-[👉尝试一下👈](https://codesandbox.io/s/the-editor-xd5sf?file=/src/App.vue)
+[👉体验一下👈](https://codesandbox.io/s/the-editor-xd5sf?file=/src/App.vue)
 
 ## 特性
 

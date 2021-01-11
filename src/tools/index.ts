@@ -5,6 +5,7 @@ import { Enclose } from './enclose';
 import { Quote } from './quote';
 import { List } from './list';
 import { Line } from './line';
+import { Preview } from './preview';
 
 export const builtinTools = new Map()
 
@@ -23,3 +24,4 @@ builtinTools.set('quote', new PadStart('引用', '>', 'quote-left'));
 builtinTools.set('ul', new List('无序列表', 'ul'));
 builtinTools.set('ol', new List('有序列表', 'ol'));
 builtinTools.set('line', Line);
+builtinTools.set('preview', Preview);
