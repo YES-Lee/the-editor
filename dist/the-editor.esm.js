@@ -1,16 +1,16 @@
 /*! *****************************************************************************
-Copyright (c) Microsoft Corporation.
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
 
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
 
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
 ***************************************************************************** */
 
 var __assign = function() {
@@ -11959,6 +11959,161 @@ var Previewer = /** @class */ (function () {
         });
     };
     return Previewer;
+}());
+
+var Undo = {
+    name: '撤销',
+    icon: 'undo',
+    action: function (editor) {
+        editor.codemirrorEditor.execCommand('undo');
+    }
+};
+
+var Redo = {
+    name: '重做',
+    icon: 'redo',
+    action: function (editor) {
+        editor.codemirrorEditor.execCommand('redo');
+    }
+};
+
+var PadStart = /** @class */ (function () {
+    function PadStart(name, key, icon) {
+        this.name = name;
+        this.icon = icon;
+        this.action = function (editor) {
+            editor.codemirrorEditor.replaceRange(key, {
+                line: editor.codemirrorEditor.getCursor().line,
+                ch: 0
+            });
+        };
+    }
+    return PadStart;
+}());
+
+var Enclose = /** @class */ (function () {
+    function Enclose(name, key, icon) {
+        this.name = name;
+        this.icon = icon;
+        this.action = function (editor) {
+            var selections = editor.codemirrorEditor.getSelections();
+            editor.codemirrorEditor.replaceSelections(selections.map(function (s) { return "" + key + s + key; }));
+        };
+    }
+    return Enclose;
+}());
+
+function getSelectedLines(selections) {
+    var lines = [];
+    selections.forEach(function (s) {
+        var head = s.head.line;
+        var anchor = s.anchor.line;
+        var range = [];
+        for (var i = Math.min(head, anchor); i <= Math.max(head, anchor); i++) {
+            range.push(i);
+        }
+        lines.push(range);
+    });
+    return lines;
+}
+
+var List = /** @class */ (function () {
+    function List(name, type) {
+        this.name = name;
+        this.icon = 'list-' + type;
+        this.action = function (editor) {
+            var lines = getSelectedLines(editor.codemirrorEditor.listSelections());
+            lines.forEach(function (line) {
+                line.forEach(function (l, idx) {
+                    if (type === 'ul') {
+                        editor.codemirrorEditor.replaceRange('- ', {
+                            line: l,
+                            ch: 0
+                        });
+                    }
+                    if (type === 'ol') {
+                        editor.codemirrorEditor.replaceRange(idx + 1 + ". ", {
+                            line: l,
+                            ch: 0
+                        });
+                    }
+                });
+            });
+        };
+    }
+    return List;
+}());
+
+var Line = {
+    name: '横线',
+    icon: 'minus',
+    action: function (editor) {
+        editor.codemirrorEditor.replaceRange(['', '------------', '', ''], {
+            line: editor.codemirrorEditor.getCursor().line + 1,
+            ch: 0
+        });
+    }
+};
+
+var builtinTools = new Map();
+builtinTools.set('undo', Undo);
+builtinTools.set('redo', Redo);
+builtinTools.set('h1', new PadStart('H1', '# '));
+builtinTools.set('h2', new PadStart('H2', '## '));
+builtinTools.set('h3', new PadStart('H3', '### '));
+builtinTools.set('h4', new PadStart('H4', '#### '));
+builtinTools.set('h5', new PadStart('H5', '##### '));
+builtinTools.set('h6', new PadStart('H6', '###### '));
+builtinTools.set('bold', new Enclose('粗体', '**', 'bold'));
+builtinTools.set('strikethrough', new Enclose('删除线', '~~', 'strikethrough'));
+builtinTools.set('italic', new Enclose('斜体', '*', 'italic'));
+builtinTools.set('quote', new PadStart('引用', '>', 'quote-left'));
+builtinTools.set('ul', new List('无序列表', 'ul'));
+builtinTools.set('ol', new List('有序列表', 'ol'));
+builtinTools.set('line', Line);
+
+var Toolbar = /** @class */ (function () {
+    function Toolbar(editor) {
+        this.editor = editor;
+        var toolbar = document.createElement('div');
+        this.toolbar = toolbar;
+        toolbar.className = 'the_editor--toolbar';
+        editor.host.classList.add('the_editor_width_toolbar');
+        editor.host.insertBefore(toolbar, editor.host.firstChild);
+        this.createTools(editor.options.toolbar.items.map(function (item) { return builtinTools.get(item) || item; }).filter(function (item) { return !!item; }));
+    }
+    Toolbar.prototype.createTools = function (tools) {
+        var _this = this;
+        tools.forEach(function (tool) {
+            var toolEl = document.createElement('span');
+            if (tool === '|') {
+                toolEl.className = 'tool_gutter';
+            }
+            else {
+                toolEl.className = 'tool_item';
+                if (typeof tool === 'string') {
+                    toolEl.innerText = tool;
+                    toolEl.title = tool;
+                }
+                else {
+                    toolEl.title = tool.name;
+                    if (tool.icon) {
+                        toolEl.classList.add("fa", "fa-" + tool.icon);
+                    }
+                    else {
+                        toolEl.innerText = tool.name;
+                    }
+                    if (typeof tool.action === 'function') {
+                        toolEl.addEventListener('click', function () {
+                            tool.action(_this.editor);
+                        });
+                    }
+                }
+            }
+            _this.toolbar.appendChild(toolEl);
+        });
+    };
+    return Toolbar;
 }());
 
 var defaults = createCommonjsModule(function (module) {
@@ -57289,7 +57444,7 @@ var TheEditor = /** @class */ (function () {
      */
     function TheEditor(host, options) {
         var _this = this;
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f;
         this.eventListeners = {};
         this.toc = [];
         this.html = '';
@@ -57332,7 +57487,9 @@ var TheEditor = /** @class */ (function () {
             value: ((_e = this.options) === null || _e === void 0 ? void 0 : _e.value) || ''
         });
         this.updateHTML();
-        // this.toolbar = new Toolbar(this);
+        if ((_f = this.options.toolbar) === null || _f === void 0 ? void 0 : _f.visible) {
+            this.toolbar = new Toolbar(this);
+        }
         this.previewer = new Previewer(this);
         this.emit('change', this.codemirrorEditor.getValue());
         this.codemirrorEditor.on('change', function (editor) {
@@ -57436,7 +57593,20 @@ var TheEditor = /** @class */ (function () {
     TheEditor.defaultOptions = {
         lineNumbers: true,
         tabSize: 2,
-        gfm: true
+        gfm: true,
+        toolbar: {
+            visible: true,
+            items: [
+                'undo', 'redo',
+                '|',
+                'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                '|',
+                'bold', 'strikethrough', 'italic', 'quote',
+                '|',
+                'ul', 'ol', 'line',
+                '|'
+            ]
+        }
     };
     return TheEditor;
 }());
