@@ -3,7 +3,7 @@ export type ModalConfig = {
   content: string | HTMLElement;
   actions?: Array<{
     title: string;
-    action: () => void;
+    action?: () => void;
   }>;
   onClose?: () => void;
 };
@@ -113,6 +113,15 @@ export class Modal {
       const footer = document.createElement('footer');
       footer.className = 'the_editor_modal--footer';
       modal.appendChild(footer);
+      this.config.actions.forEach(item => {
+        const actionButton = document.createElement('button')
+        actionButton.className = 'the_editor_modal--footer_action_button';
+        actionButton.innerText = item.title;
+        if (typeof item.action === 'function') {
+          actionButton.addEventListener('click', item.action);
+        }
+        footer.appendChild(actionButton);
+      })
     }
   }
 

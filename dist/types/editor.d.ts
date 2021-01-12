@@ -7,6 +7,7 @@ import { Previewer } from './previewer';
 import { Toolbar } from './toolbar';
 import type { Options, TOC } from './types';
 import './styles/index.scss';
+import { Modal, ModalConfig } from './modal';
 export declare class TheEditor {
     static defaultOptions: Options;
     private eventListeners;
@@ -29,7 +30,7 @@ export declare class TheEditor {
     emit(event: 'change', value: string): void;
     emit(event: 'scroll', scrollInfo: ScrollInfo): void;
     scrollToPercent(percent: number): void;
-    createModal(content: string | HTMLElement): void;
+    openModal(config: ModalConfig): Modal;
     /**
      * 设置markdown内容
      * @param markdown markdown文本

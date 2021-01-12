@@ -30,3 +30,16 @@
     }
   }
 }
+
+.the_editor--label {
+  opacity: .8;
+  margin-right: 6px;
+}
+
+.the_editor--input {
+  opacity: .8;
+  padding: .5rem .8rem;
+  outline: none;
+  border-radius: 2px;
+  border: 1px solid #eee;
+}

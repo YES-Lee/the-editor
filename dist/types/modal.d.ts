@@ -3,7 +3,7 @@ export declare type ModalConfig = {
     content: string | HTMLElement;
     actions?: Array<{
         title: string;
-        action: () => void;
+        action?: () => void;
     }>;
     onClose?: () => void;
 };

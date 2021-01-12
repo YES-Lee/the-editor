@@ -12,7 +12,7 @@ import hljs from 'highlight.js'
 import type { Options, TOC } from './types';
 
 import './styles/index.scss';
-import { Modal } from './modal';
+import { Modal, ModalConfig } from './modal';
 
 export class TheEditor {
   static defaultOptions: Options = {
@@ -30,13 +30,9 @@ export class TheEditor {
         '|',
         'ul', 'ol', 'line',
         '|',
+        'link',
+        '|',
         'preview',
-        {
-          name: '弹框测试',
-          action: (editor: TheEditor) => {
-            editor.createModal('测试')
-          }
-        }
       ]
     }
   }
@@ -183,12 +179,8 @@ export class TheEditor {
     this.codemirrorEditor.scrollTo(0, percent * (scrollInfo.height - scrollInfo.clientHeight))
   }
 
-  createModal(content: string | HTMLElement) {
-    const modal = new Modal({
-      title: '测试',
-      content: 'test',
-      actions: []
-    });
+  openModal(config: ModalConfig) {
+    return new Modal(config);
   }
 
   /**
