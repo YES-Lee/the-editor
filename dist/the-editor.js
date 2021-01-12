@@ -1,5 +1,5 @@
 /*!
- * the-editor.js v0.0.6
+ * the-editor.js v0.0.7
  * Copyright (c) 2020-2021 Johnson
  * Released under the MIT License.
  */
@@ -12089,6 +12089,33 @@ var Preview = {
     }
 };
 
+var Link = {
+    name: '链接',
+    icon: 'link',
+    action: function (editor) {
+        var template = "\n      <div style=\"display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_link--title\" class=\"the_editor--label\">\u94FE\u63A5\u6807\u9898</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_link--title\" class=\"the_editor--input\">\n      </div>\n      <div style=\"margin-top: 8px; display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_link--url\" class=\"the_editor--label\">\u94FE\u63A5\u5730\u5740</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_link--url\" class=\"the_editor--input\" value=\"http://\">\n      </div>\n    ";
+        var container = document.createElement('div');
+        container.innerHTML = template;
+        var modal = editor.openModal({
+            title: '添加链接',
+            content: container,
+            actions: [
+                {
+                    title: '确定',
+                    action: function () {
+                        var _a, _b;
+                        var title = ((_a = container.querySelector('#the_editor--tool_link--title')) === null || _a === void 0 ? void 0 : _a.value) || '';
+                        var url = ((_b = container.querySelector('#the_editor--tool_link--url')) === null || _b === void 0 ? void 0 : _b.value) || '';
+                        var str = "[" + (title || url) + "](" + url + ")";
+                        editor.codemirrorEditor.replaceSelection(str);
+                        modal.close();
+                    }
+                }
+            ]
+        });
+    }
+};
+
 var builtinTools = new Map();
 builtinTools.set('undo', Undo);
 builtinTools.set('redo', Redo);
@@ -12105,6 +12132,7 @@ builtinTools.set('quote', new PadStart('引用', '>', 'quote-left'));
 builtinTools.set('ul', new List('无序列表', 'ul'));
 builtinTools.set('ol', new List('有序列表', 'ol'));
 builtinTools.set('line', Line);
+builtinTools.set('link', Link);
 builtinTools.set('preview', Preview);
 
 var Toolbar = /** @class */ (function () {
@@ -57471,6 +57499,115 @@ core.registerLanguage('zephir', zephir_1);
 
 var lib = core;
 
+var Modal = /** @class */ (function () {
+    function Modal(config) {
+        this.config = config;
+        this.container = document.createElement('div');
+        this.container.className = 'the_editor_modal';
+        this.modal = this.create();
+        this.container.appendChild(this.modal);
+        document.body.appendChild(this.container);
+        var rect = this.modal.getBoundingClientRect();
+        this.modal.style.left = (window.innerWidth - rect.width) / 2 + "px";
+        this.modal.style.top = (window.innerHeight - rect.height) / 2 + "px";
+    }
+    Modal.prototype.create = function () {
+        var modalBody = document.createElement('div');
+        var content = document.createElement('div');
+        modalBody.className = 'the_editor_modal--body';
+        content.className = 'the_editor_modal--content';
+        if (typeof this.config.content === 'string') {
+            content.innerHTML = this.config.content;
+        }
+        if (this.config.content instanceof HTMLElement) {
+            content.appendChild(this.config.content);
+        }
+        this.createHeader(modalBody);
+        modalBody.appendChild(content);
+        this.createRooter(modalBody);
+        return modalBody;
+    };
+    Modal.prototype.createHeader = function (modal) {
+        var _this = this;
+        var header = document.createElement('div');
+        header.className = 'the_editor_modal--header';
+        var titleEl = document.createElement('span');
+        titleEl.className = 'the_editor_modal--header_title';
+        titleEl.innerText = this.config.title;
+        var closeIcon = document.createElement('span');
+        closeIcon.className = 'the_editor_modal--header_close fa fa-times';
+        header.appendChild(titleEl);
+        header.appendChild(closeIcon);
+        modal.appendChild(header);
+        closeIcon.addEventListener('click', function () {
+            if (typeof _this.config.onClose === 'function') {
+                _this.config.onClose();
+            }
+            _this.close();
+        });
+        var lastCursorPos = {
+            x: 0,
+            y: 0
+        };
+        var move = function ($e) {
+            var rect = _this.modal.getBoundingClientRect();
+            var dX = $e.pageX - lastCursorPos.x + rect.x;
+            var dY = $e.pageY - lastCursorPos.y + rect.y;
+            var mX = window.innerWidth - rect.width; // 最大
+            var mY = window.innerHeight - rect.height;
+            if (dX >= 0 && dX <= mX) {
+                lastCursorPos.x = $e.pageX;
+            }
+            if (dY >= 0 && dY <= mY) {
+                lastCursorPos.y = $e.pageY;
+            }
+            if (dX <= 0) {
+                dX = 0;
+            }
+            if (dX >= mX) {
+                dX = mX;
+            }
+            if (dY <= 0) {
+                dY = 0;
+            }
+            if (dY >= mY) {
+                dY = mY;
+            }
+            _this.modal.style.left = dX + "px";
+            _this.modal.style.top = dY + "px";
+        };
+        header.addEventListener('mousedown', function ($e) {
+            lastCursorPos.x = $e.pageX;
+            lastCursorPos.y = $e.pageY;
+            window.addEventListener('mousemove', move);
+        });
+        window.addEventListener('mouseup', function ($e) {
+            window.removeEventListener('mousemove', move);
+        });
+    };
+    Modal.prototype.createRooter = function (modal) {
+        var _a;
+        if ((_a = this.config.actions) === null || _a === void 0 ? void 0 : _a.length) {
+            var footer_1 = document.createElement('footer');
+            footer_1.className = 'the_editor_modal--footer';
+            modal.appendChild(footer_1);
+            this.config.actions.forEach(function (item) {
+                var actionButton = document.createElement('button');
+                actionButton.className = 'the_editor_modal--footer_action_button';
+                actionButton.innerText = item.title;
+                if (typeof item.action === 'function') {
+                    actionButton.addEventListener('click', item.action);
+                }
+                footer_1.appendChild(actionButton);
+            });
+        }
+    };
+    Modal.prototype.close = function () {
+        document.body.removeChild(this.container);
+    };
+    return Modal;
+}());
+
 var TheEditor = /** @class */ (function () {
     /**
      * The Editor构造函数
@@ -57596,6 +57733,9 @@ var TheEditor = /** @class */ (function () {
         var scrollInfo = this.codemirrorEditor.getScrollInfo();
         this.codemirrorEditor.scrollTo(0, percent * (scrollInfo.height - scrollInfo.clientHeight));
     };
+    TheEditor.prototype.openModal = function (config) {
+        return new Modal(config);
+    };
     /**
      * 设置markdown内容
      * @param markdown markdown文本
@@ -57640,7 +57780,9 @@ var TheEditor = /** @class */ (function () {
                 '|',
                 'ul', 'ol', 'line',
                 '|',
-                'preview'
+                'link',
+                '|',
+                'preview',
             ]
         }
     };
