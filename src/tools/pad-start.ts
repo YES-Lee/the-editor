@@ -11,8 +11,9 @@ export class PadStart implements Tool {
     this.icon = icon;
 
     this.action = (editor: TheEditor) => {
-      editor.codemirrorEditor.replaceRange(key, {
-        line: editor.codemirrorEditor.getCursor().line,
+      const cm = editor.codemirrorEditor;
+      cm.replaceRange(key, {
+        line: cm.getCursor().line,
         ch: 0
       })
     }

@@ -30,7 +30,7 @@ export class TheEditor {
         '|',
         'ul', 'ol', 'line',
         '|',
-        'link',
+        'link', 'inline-code',
         '|',
         'preview',
       ]

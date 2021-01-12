@@ -25,4 +25,5 @@ builtinTools.set('ul', new List('无序列表', 'ul'));
 builtinTools.set('ol', new List('有序列表', 'ol'));
 builtinTools.set('line', Line);
 builtinTools.set('link', Link);
+builtinTools.set('inline-code', new Enclose('行内代码', '`', 'code'));
 builtinTools.set('preview', Preview);

@@ -1,6 +1,5 @@
 import { TheEditor } from '../editor';
 import { Tool } from '../interfaces/tool';
-import { getSelectedLines } from './utils';
 
 export class List implements Tool {
   name: string;
@@ -12,23 +11,26 @@ export class List implements Tool {
     this.icon = 'list-' + type
 
     this.action = (editor: TheEditor) => {
-      const lines = getSelectedLines(editor.codemirrorEditor.listSelections())
-      lines.forEach(line => {
-        line.forEach((l, idx) => {
+      const cm = editor.codemirrorEditor;
+      const selection = cm.getSelection();
+
+      if (selection === '') {
+        if (type === 'ul') cm.replaceSelection('- ' + selection);
+        if (type === 'ol') cm.replaceSelection('1. ' + selection);
+      } else {
+        const selectionText = selection.split("\n");
+
+        for (let i = 0, len = selectionText.length; i < len; i++) {
           if (type === 'ul') {
-            editor.codemirrorEditor.replaceRange('- ', {
-              line: l,
-              ch: 0
-            })
+            selectionText[i] = (selectionText[i] === '') ? '' : '- ' + selectionText[i];
           }
           if (type === 'ol') {
-            editor.codemirrorEditor.replaceRange(`${idx + 1}. `, {
-              line: l,
-              ch: 0
-            })
+            selectionText[i] = (selectionText[i] === '') ? '' : `${i + 1}. ` + selectionText[i];
           }
-        })
-      })
+        }
+
+        cm.replaceSelection(selectionText.join("\n"));
+      }
     }
   }
 }
