@@ -12,6 +12,7 @@ import hljs from 'highlight.js'
 import type { Options, TOC } from './types';
 
 import './styles/index.scss';
+import { Modal } from './modal';
 
 export class TheEditor {
   static defaultOptions: Options = {
@@ -29,7 +30,13 @@ export class TheEditor {
         '|',
         'ul', 'ol', 'line',
         '|',
-        'preview'
+        'preview',
+        {
+          name: '弹框测试',
+          action: (editor: TheEditor) => {
+            editor.createModal('测试')
+          }
+        }
       ]
     }
   }
@@ -174,6 +181,14 @@ export class TheEditor {
   scrollToPercent(percent: number): void {
     const scrollInfo = this.codemirrorEditor.getScrollInfo()
     this.codemirrorEditor.scrollTo(0, percent * (scrollInfo.height - scrollInfo.clientHeight))
+  }
+
+  createModal(content: string | HTMLElement) {
+    const modal = new Modal({
+      title: '测试',
+      content: 'test',
+      actions: []
+    });
   }
 
   /**

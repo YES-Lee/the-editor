@@ -1,0 +1,57 @@
+@import 'functions';
+
+.the_editor_modal {
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  &--body {
+    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    border-radius: 2px;
+    background-color: #fff;
+    overflow: hidden;
+    width: fit-content;
+    min-width: 400px;
+    position: fixed;
+  }
+
+  &--header {
+    transition: background-color .2s ease-in-out;
+    user-select: none;
+    padding: 12px 1rem;
+    cursor: move;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    &:hover {
+      background-color: #fafafa;
+    }
+
+    &_title {
+      flex: auto;
+      font-weight: bold;
+      color: #666;
+    }
+    &_close {
+      flex: none;
+      color: #aaa;
+      cursor: pointer;
+      transition: color .1s ease-in-out;
+      &:hover {
+        color: blue;
+      }
+    }
+  }
+
+  &--content {
+    padding: 12px 1rem;
+  }
+
+  &--footer {
+    padding: 12px 1rem;
+    border-top: 1px solid #eee;
+  }
+}

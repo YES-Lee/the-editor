@@ -29,6 +29,7 @@ export declare class TheEditor {
     emit(event: 'change', value: string): void;
     emit(event: 'scroll', scrollInfo: ScrollInfo): void;
     scrollToPercent(percent: number): void;
+    createModal(content: string | HTMLElement): void;
     /**
      * 设置markdown内容
      * @param markdown markdown文本
