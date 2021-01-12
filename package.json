@@ -5,12 +5,11 @@
   "main": "dist/the-editor.js",
   "browser": "dist/the-editor.esm.js",
   "umd": "dist/the-editor.min.js",
-  "types": "dist",
+  "types": "dist/types",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "del dist/* && rollup -c rollup.config.js",
-    "dev": "rollup -c rollup.config.dev.js -w",
-    "build:style": "sass src/styles:dist/styles"
+    "dev": "rollup -c rollup.config.dev.js -w"
   },
   "keywords": [
     "markdown",

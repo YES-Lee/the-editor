@@ -1,3 +1,8 @@
+/*!
+ * the-editor.js v0.0.6
+ * Copyright (c) 2020-2021 Johnson
+ * Released under the MIT License.
+ */
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -11927,6 +11932,7 @@ CodeMirror.defineMode("gfm", function(config, modeConfig) {
 var Previewer = /** @class */ (function () {
     function Previewer(editor) {
         this.editor = editor;
+        this.visible = true;
         var previewer = document.createElement('div');
         this.previewer = previewer;
         previewer.classList.add('the_editor--previewer', 'markdown-body');
@@ -11957,6 +11963,15 @@ var Previewer = /** @class */ (function () {
             _this.editor.on('scroll', onEditorScroll);
             _this.previewer.removeEventListener('scroll', onPreviewerScroll);
         });
+    };
+    Previewer.prototype.toggleVisible = function () {
+        this.visible = !this.visible;
+        if (this.visible) {
+            this.previewer.style.display = 'block';
+        }
+        else {
+            this.previewer.style.display = 'none';
+        }
     };
     return Previewer;
 }());
@@ -12055,6 +12070,23 @@ var Line = {
     }
 };
 
+var Preview = {
+    name: '预览',
+    icon: 'eye-slash',
+    action: function (editor, el) {
+        var _a, _b;
+        (_a = editor.previewer) === null || _a === void 0 ? void 0 : _a.toggleVisible();
+        if ((_b = editor.previewer) === null || _b === void 0 ? void 0 : _b.visible) {
+            el.classList.remove('fa-eye');
+            el.classList.add('fa-eye-slash');
+        }
+        else {
+            el.classList.remove('fa-eye-slash');
+            el.classList.add('fa-eye');
+        }
+    }
+};
+
 var builtinTools = new Map();
 builtinTools.set('undo', Undo);
 builtinTools.set('redo', Redo);
@@ -12071,6 +12103,7 @@ builtinTools.set('quote', new PadStart('引用', '>', 'quote-left'));
 builtinTools.set('ul', new List('无序列表', 'ul'));
 builtinTools.set('ol', new List('有序列表', 'ol'));
 builtinTools.set('line', Line);
+builtinTools.set('preview', Preview);
 
 var Toolbar = /** @class */ (function () {
     function Toolbar(editor) {
@@ -12105,7 +12138,7 @@ var Toolbar = /** @class */ (function () {
                     }
                     if (typeof tool.action === 'function') {
                         toolEl.addEventListener('click', function () {
-                            tool.action(_this.editor);
+                            tool.action(_this.editor, toolEl);
                         });
                     }
                 }
@@ -57604,7 +57637,8 @@ var TheEditor = /** @class */ (function () {
                 'bold', 'strikethrough', 'italic', 'quote',
                 '|',
                 'ul', 'ol', 'line',
-                '|'
+                '|',
+                'preview'
             ]
         }
     };
@@ -57612,3 +57646,4 @@ var TheEditor = /** @class */ (function () {
 }());
 
 export default TheEditor;
+//# sourceMappingURL=the-editor.esm.js.map

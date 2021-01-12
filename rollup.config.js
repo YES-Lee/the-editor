@@ -5,6 +5,13 @@ import pkg from './package.json'
 import postcss from 'rollup-plugin-postcss'
 import { terser } from 'rollup-plugin-terser'
 
+const banner =
+  '/*!\n' +
+  ` * the-editor.js v${pkg.version}\n` +
+  ` * Copyright (c) 2020-${new Date().getFullYear()} Johnson\n` +
+  ` * Released under the ${pkg.license} License.\n` +
+  ' */'
+
 const commonPlugins = [
   commonjs(),
   nodeResolve(),
@@ -24,8 +31,9 @@ export default [
     output: {
       file: pkg.main,
       format: 'cjs',
-      sourcemap: false,
-      exports: 'default'
+      sourcemap: true,
+      exports: 'default',
+      banner
     },
     plugins: [
       postcss({
@@ -41,7 +49,8 @@ export default [
     output: {
       file: pkg.browser,
       format: 'esm',
-      sourcemap: false
+      sourcemap: true,
+      banner
     },
     plugins: [
       postcss({
@@ -59,6 +68,7 @@ export default [
       format: 'umd',
       name: 'TheEditor', // umd模块名称，相当于一个命名空间，会自动挂载到window下面
       sourcemap: false,
+      banner,
       plugins: [
         terser()
       ]
