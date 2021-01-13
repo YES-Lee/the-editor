@@ -481,6 +481,21 @@
   opacity: 0.8;
   margin-right: 6px;
 }
+.the_editor--label_file_input {
+  display: inline-block;
+  padding: 0.5rem 0.8rem;
+  border-radius: 2px;
+  border: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  font-size: 14px;
+}
+.the_editor--label_file_input:hover {
+  background-color: #fafafa;
+}
+.the_editor--label_file_input:active {
+  background-color: #efefef;
+}
 
 .the_editor--input {
   opacity: 0.8;
@@ -1438,7 +1453,7 @@
   margin-left: 2px;
 }
 
-.the_editor_modal {
+.the_editor_dialog {
   position: fixed;
   z-index: 999;
   top: 0;
@@ -1446,7 +1461,7 @@
   right: 0;
   bottom: 0;
 }
-.the_editor_modal--body {
+.the_editor_dialog--body {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   border-radius: 2px;
   background-color: #fff;
@@ -1455,7 +1470,7 @@
   min-width: 400px;
   position: fixed;
 }
-.the_editor_modal--header {
+.the_editor_dialog--header {
   transition: background-color 0.2s ease-in-out;
   user-select: none;
   padding: 12px 1rem;
@@ -1464,31 +1479,31 @@
   align-items: center;
   border-bottom: 1px solid #eee;
 }
-.the_editor_modal--header:hover {
+.the_editor_dialog--header:hover {
   background-color: #fafafa;
 }
-.the_editor_modal--header_title {
+.the_editor_dialog--header_title {
   flex: auto;
   font-weight: bold;
   color: #333;
 }
-.the_editor_modal--header_close {
+.the_editor_dialog--header_close {
   flex: none;
   color: #aaa;
   cursor: pointer;
   transition: color 0.1s ease-in-out;
 }
-.the_editor_modal--header_close:hover {
+.the_editor_dialog--header_close:hover {
   color: blue;
 }
-.the_editor_modal--content {
+.the_editor_dialog--content {
   padding: 12px 1rem;
 }
-.the_editor_modal--footer {
+.the_editor_dialog--footer {
   padding: 12px 1rem;
   text-align: right;
 }
-.the_editor_modal--footer_action_button {
+.the_editor_dialog--footer_action_button {
   background-color: #fff;
   outline: none;
   border: 1px solid #eee;
@@ -1497,10 +1512,10 @@
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
 }
-.the_editor_modal--footer_action_button:hover {
+.the_editor_dialog--footer_action_button:hover {
   background-color: #fafafa;
 }
-.the_editor_modal--footer_action_button:active {
+.the_editor_dialog--footer_action_button:active {
   background-color: #efefef;
 }
 

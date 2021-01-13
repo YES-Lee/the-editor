@@ -1,5 +1,5 @@
 /*!
- * the-editor.js v0.0.7
+ * the-editor.js v0.0.8
  * Copyright (c) 2020-2021 Johnson
  * Released under the MIT License.
  */
@@ -11997,8 +11997,9 @@ var PadStart = /** @class */ (function () {
         this.name = name;
         this.icon = icon;
         this.action = function (editor) {
-            editor.codemirrorEditor.replaceRange(key, {
-                line: editor.codemirrorEditor.getCursor().line,
+            var cm = editor.codemirrorEditor;
+            cm.replaceRange(key, {
+                line: cm.getCursor().line,
                 ch: 0
             });
         };
@@ -12011,49 +12012,43 @@ var Enclose = /** @class */ (function () {
         this.name = name;
         this.icon = icon;
         this.action = function (editor) {
-            var selections = editor.codemirrorEditor.getSelections();
-            editor.codemirrorEditor.replaceSelections(selections.map(function (s) { return "" + key + s + key; }));
+            var cm = editor.codemirrorEditor;
+            var cursor = cm.getCursor();
+            var selections = cm.getSelections();
+            cm.replaceSelections(selections.map(function (s) { return "" + key + s + key; }));
+            if (selections.length === 1) {
+                cm.setCursor(cursor.line, cursor.ch + key.length);
+            }
         };
     }
     return Enclose;
 }());
-
-function getSelectedLines(selections) {
-    var lines = [];
-    selections.forEach(function (s) {
-        var head = s.head.line;
-        var anchor = s.anchor.line;
-        var range = [];
-        for (var i = Math.min(head, anchor); i <= Math.max(head, anchor); i++) {
-            range.push(i);
-        }
-        lines.push(range);
-    });
-    return lines;
-}
 
 var List = /** @class */ (function () {
     function List(name, type) {
         this.name = name;
         this.icon = 'list-' + type;
         this.action = function (editor) {
-            var lines = getSelectedLines(editor.codemirrorEditor.listSelections());
-            lines.forEach(function (line) {
-                line.forEach(function (l, idx) {
+            var cm = editor.codemirrorEditor;
+            var selection = cm.getSelection();
+            if (selection === '') {
+                if (type === 'ul')
+                    cm.replaceSelection('- ' + selection);
+                if (type === 'ol')
+                    cm.replaceSelection('1. ' + selection);
+            }
+            else {
+                var selectionText = selection.split("\n");
+                for (var i = 0, len = selectionText.length; i < len; i++) {
                     if (type === 'ul') {
-                        editor.codemirrorEditor.replaceRange('- ', {
-                            line: l,
-                            ch: 0
-                        });
+                        selectionText[i] = (selectionText[i] === '') ? '' : '- ' + selectionText[i];
                     }
                     if (type === 'ol') {
-                        editor.codemirrorEditor.replaceRange(idx + 1 + ". ", {
-                            line: l,
-                            ch: 0
-                        });
+                        selectionText[i] = (selectionText[i] === '') ? '' : i + 1 + ". " + selectionText[i];
                     }
-                });
-            });
+                }
+                cm.replaceSelection(selectionText.join("\n"));
+            }
         };
     }
     return List;
@@ -12063,10 +12058,8 @@ var Line = {
     name: '横线',
     icon: 'minus',
     action: function (editor) {
-        editor.codemirrorEditor.replaceRange(['', '------------', '', ''], {
-            line: editor.codemirrorEditor.getCursor().line + 1,
-            ch: 0
-        });
+        var cm = editor.codemirrorEditor;
+        cm.replaceSelection('\n\n---\n\n');
     }
 };
 
@@ -12091,10 +12084,10 @@ var Link = {
     name: '链接',
     icon: 'link',
     action: function (editor) {
-        var template = "\n      <div style=\"display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_link--title\" class=\"the_editor--label\">\u94FE\u63A5\u6807\u9898</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_link--title\" class=\"the_editor--input\">\n      </div>\n      <div style=\"margin-top: 8px; display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_link--url\" class=\"the_editor--label\">\u94FE\u63A5\u5730\u5740</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_link--url\" class=\"the_editor--input\" value=\"http://\">\n      </div>\n    ";
+        var template = "\n      <div style=\"display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_link--title\" class=\"the_editor--label\">\u94FE\u63A5\u6807\u9898</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_link--title\" class=\"the_editor--input\">\n      </div>\n      <div style=\"margin-top: 8px; display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_link--url\" class=\"the_editor--label\">\u94FE\u63A5\u5730\u5740</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_link--url\" class=\"the_editor--input\" value=\"https://\">\n      </div>\n    ";
         var container = document.createElement('div');
         container.innerHTML = template;
-        var modal = editor.openModal({
+        editor.openDialog({
             title: '添加链接',
             content: container,
             actions: [
@@ -12106,11 +12099,79 @@ var Link = {
                         var url = ((_b = container.querySelector('#the_editor--tool_link--url')) === null || _b === void 0 ? void 0 : _b.value) || '';
                         var str = "[" + (title || url) + "](" + url + ")";
                         editor.codemirrorEditor.replaceSelection(str);
-                        modal.close();
+                        editor.closeDialog();
                     }
                 }
             ]
         });
+    }
+};
+
+var CodeBlock = {
+    name: '代码块',
+    icon: 'file-code',
+    action: function (editor) {
+        var cm = editor.codemirrorEditor;
+        var cursor = cm.getCursor();
+        var selection = cm.getSelection();
+        cm.replaceSelection('```\n' + selection + '\n```');
+        if (selection === '') {
+            cm.setCursor(cursor.line + 1, 0);
+        }
+    }
+};
+
+var InsertImage = {
+    name: '插入图片',
+    icon: 'image',
+    action: function (editor) {
+        var template = "\n      <div style=\"display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_image--des\" class=\"the_editor--label\">\u56FE\u7247\u63CF\u8FF0</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_image--des\" class=\"the_editor--input\">\n      </div>\n      <div style=\"margin-top: 8px; display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_image--url\" class=\"the_editor--label\">\u56FE\u7247\u94FE\u63A5</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_image--url\" class=\"the_editor--input\" value=\"https://\">\n      </div>\n      <div style=\"margin-top: 8px; text-align: right;\">\n        <label for=\"the_editor--tool_image--file_input\" class=\"the_editor--label_file_input\">\u4E0A\u4F20\u56FE\u7247</label>\n        <input id=\"the_editor--tool_image--file_input\" style=\"display: none;\" type=\"file\" accept=\"image/*\" >\n      </div>\n    ";
+        var container = document.createElement('div');
+        container.innerHTML = template;
+        var imageDesInput = container.querySelector('#the_editor--tool_image--des');
+        var imageUrlInput = container.querySelector('#the_editor--tool_image--url');
+        var fileInput = container.querySelector('#the_editor--tool_image--file_input');
+        fileInput.addEventListener('input', function () {
+            var adaptor = editor.options.imageUploadAdaptor;
+            if (typeof (adaptor === null || adaptor === void 0 ? void 0 : adaptor.upload) !== 'function') {
+                window.alert('没有imageUploadAdaptor！');
+                return;
+            }
+            var file = fileInput.files[0];
+            var res = adaptor.upload([file]);
+            if (res instanceof Promise) {
+                res.then(function (urls) {
+                    imageUrlInput.value = urls[0];
+                });
+            }
+            else {
+                imageUrlInput.value = res[0];
+            }
+        });
+        editor.openDialog({
+            title: '插入图片',
+            content: container,
+            actions: [
+                {
+                    title: '确定',
+                    action: function () {
+                        var cm = editor.codemirrorEditor;
+                        cm.replaceSelection("![" + imageDesInput.value + "](" + imageUrlInput.value + ")");
+                        editor.closeDialog();
+                    }
+                }
+            ]
+        });
+    }
+};
+
+var Datetime = {
+    name: '插入时间',
+    icon: 'clock',
+    action: function (editor) {
+        var cm = editor.codemirrorEditor;
+        var date = new Date();
+        cm.replaceSelection(date.toLocaleString());
     }
 };
 
@@ -12131,6 +12192,10 @@ builtinTools.set('ul', new List('无序列表', 'ul'));
 builtinTools.set('ol', new List('有序列表', 'ol'));
 builtinTools.set('line', Line);
 builtinTools.set('link', Link);
+builtinTools.set('inline-code', new Enclose('行内代码', '`', 'code'));
+builtinTools.set('code-block', CodeBlock);
+builtinTools.set('image', InsertImage);
+builtinTools.set('datetime', Datetime);
 builtinTools.set('preview', Preview);
 
 var Toolbar = /** @class */ (function () {
@@ -12167,6 +12232,7 @@ var Toolbar = /** @class */ (function () {
                     if (typeof tool.action === 'function') {
                         toolEl.addEventListener('click', function () {
                             tool.action(_this.editor, toolEl);
+                            _this.editor.codemirrorEditor.focus();
                         });
                     }
                 }
@@ -57497,46 +57563,46 @@ core.registerLanguage('zephir', zephir_1);
 
 var lib = core;
 
-var Modal = /** @class */ (function () {
-    function Modal(config) {
+var Dialog = /** @class */ (function () {
+    function Dialog(config) {
         this.config = config;
         this.container = document.createElement('div');
-        this.container.className = 'the_editor_modal';
-        this.modal = this.create();
-        this.container.appendChild(this.modal);
+        this.container.className = 'the_editor_dialog';
+        this.dialog = this.create();
+        this.container.appendChild(this.dialog);
         document.body.appendChild(this.container);
-        var rect = this.modal.getBoundingClientRect();
-        this.modal.style.left = (window.innerWidth - rect.width) / 2 + "px";
-        this.modal.style.top = (window.innerHeight - rect.height) / 2 + "px";
+        var rect = this.dialog.getBoundingClientRect();
+        this.dialog.style.left = (window.innerWidth - rect.width) / 2 + "px";
+        this.dialog.style.top = (window.innerHeight - rect.height) / 2 + "px";
     }
-    Modal.prototype.create = function () {
-        var modalBody = document.createElement('div');
+    Dialog.prototype.create = function () {
+        var dialogBody = document.createElement('div');
         var content = document.createElement('div');
-        modalBody.className = 'the_editor_modal--body';
-        content.className = 'the_editor_modal--content';
+        dialogBody.className = 'the_editor_dialog--body';
+        content.className = 'the_editor_dialog--content';
         if (typeof this.config.content === 'string') {
             content.innerHTML = this.config.content;
         }
         if (this.config.content instanceof HTMLElement) {
             content.appendChild(this.config.content);
         }
-        this.createHeader(modalBody);
-        modalBody.appendChild(content);
-        this.createRooter(modalBody);
-        return modalBody;
+        this.createHeader(dialogBody);
+        dialogBody.appendChild(content);
+        this.createRooter(dialogBody);
+        return dialogBody;
     };
-    Modal.prototype.createHeader = function (modal) {
+    Dialog.prototype.createHeader = function (dialog) {
         var _this = this;
         var header = document.createElement('div');
-        header.className = 'the_editor_modal--header';
+        header.className = 'the_editor_dialog--header';
         var titleEl = document.createElement('span');
-        titleEl.className = 'the_editor_modal--header_title';
+        titleEl.className = 'the_editor_dialog--header_title';
         titleEl.innerText = this.config.title;
         var closeIcon = document.createElement('span');
-        closeIcon.className = 'the_editor_modal--header_close fa fa-times';
+        closeIcon.className = 'the_editor_dialog--header_close fa fa-times';
         header.appendChild(titleEl);
         header.appendChild(closeIcon);
-        modal.appendChild(header);
+        dialog.appendChild(header);
         closeIcon.addEventListener('click', function () {
             if (typeof _this.config.onClose === 'function') {
                 _this.config.onClose();
@@ -57548,7 +57614,7 @@ var Modal = /** @class */ (function () {
             y: 0
         };
         var move = function ($e) {
-            var rect = _this.modal.getBoundingClientRect();
+            var rect = _this.dialog.getBoundingClientRect();
             var dX = $e.pageX - lastCursorPos.x + rect.x;
             var dY = $e.pageY - lastCursorPos.y + rect.y;
             var mX = window.innerWidth - rect.width; // 最大
@@ -57571,8 +57637,8 @@ var Modal = /** @class */ (function () {
             if (dY >= mY) {
                 dY = mY;
             }
-            _this.modal.style.left = dX + "px";
-            _this.modal.style.top = dY + "px";
+            _this.dialog.style.left = dX + "px";
+            _this.dialog.style.top = dY + "px";
         };
         header.addEventListener('mousedown', function ($e) {
             lastCursorPos.x = $e.pageX;
@@ -57583,15 +57649,15 @@ var Modal = /** @class */ (function () {
             window.removeEventListener('mousemove', move);
         });
     };
-    Modal.prototype.createRooter = function (modal) {
+    Dialog.prototype.createRooter = function (dialog) {
         var _a;
         if ((_a = this.config.actions) === null || _a === void 0 ? void 0 : _a.length) {
             var footer_1 = document.createElement('footer');
-            footer_1.className = 'the_editor_modal--footer';
-            modal.appendChild(footer_1);
+            footer_1.className = 'the_editor_dialog--footer';
+            dialog.appendChild(footer_1);
             this.config.actions.forEach(function (item) {
                 var actionButton = document.createElement('button');
-                actionButton.className = 'the_editor_modal--footer_action_button';
+                actionButton.className = 'the_editor_dialog--footer_action_button';
                 actionButton.innerText = item.title;
                 if (typeof item.action === 'function') {
                     actionButton.addEventListener('click', item.action);
@@ -57600,10 +57666,10 @@ var Modal = /** @class */ (function () {
             });
         }
     };
-    Modal.prototype.close = function () {
+    Dialog.prototype.close = function () {
         document.body.removeChild(this.container);
     };
-    return Modal;
+    return Dialog;
 }());
 
 var TheEditor = /** @class */ (function () {
@@ -57661,6 +57727,7 @@ var TheEditor = /** @class */ (function () {
             this.toolbar = new Toolbar(this);
         }
         this.previewer = new Previewer(this);
+        this.initPaseImage();
         this.emit('change', this.codemirrorEditor.getValue());
         this.codemirrorEditor.on('change', function (editor) {
             _this.updateHTML();
@@ -57668,40 +57735,6 @@ var TheEditor = /** @class */ (function () {
         });
         this.codemirrorEditor.on('scroll', function (editor) {
             _this.emit('scroll', editor.getScrollInfo());
-        });
-        this.codemirrorEditor.on('paste', function (editor, event) {
-            if (!event.clipboardData) {
-                return;
-            }
-            var types = event.clipboardData.types;
-            if (types.length > 1 || !types.includes('Files')) {
-                // 粘贴内容中包含文件以外的其他类型数据，则不处理图片
-                return;
-            }
-            var images = Array.from(event.clipboardData.files).filter(function (f) { return /image\/.*/gi.test(f.type); });
-            if (!images.length) {
-                return;
-            }
-            if (!_this.options.imageUploadAdaptor) {
-                console.warn('[The Editor] 请在选项中提供imageUploadAdaptor');
-                return;
-            }
-            event.preventDefault();
-            editor.execCommand('newlineAndIndent');
-            var startCursor = editor.getCursor();
-            editor.replaceSelection('![正在上传...](...)');
-            var endCursor = editor.getCursor();
-            var res = _this.options.imageUploadAdaptor.upload(images);
-            var appendImages = function (urls) {
-                var str = urls.map(function (u) { return "![](" + u + ")"; }).join('\n');
-                editor.replaceRange(str, startCursor, endCursor);
-            };
-            if (res instanceof Promise) {
-                res.then(appendImages);
-            }
-            else {
-                appendImages(res);
-            }
         });
     }
     TheEditor.prototype.on = function (event, handler) {
@@ -57727,12 +57760,25 @@ var TheEditor = /** @class */ (function () {
             fn(value);
         });
     };
+    /**
+     * 按比例滚动
+     * @param percent 滚动比例
+     */
     TheEditor.prototype.scrollToPercent = function (percent) {
         var scrollInfo = this.codemirrorEditor.getScrollInfo();
         this.codemirrorEditor.scrollTo(0, percent * (scrollInfo.height - scrollInfo.clientHeight));
     };
-    TheEditor.prototype.openModal = function (config) {
-        return new Modal(config);
+    /**
+     * 显示对话框
+     * @param config 对话框配置
+     */
+    TheEditor.prototype.openDialog = function (config) {
+        this.dialog = new Dialog(config);
+    };
+    TheEditor.prototype.closeDialog = function () {
+        var _a;
+        (_a = this.dialog) === null || _a === void 0 ? void 0 : _a.close();
+        this.codemirrorEditor.focus();
     };
     /**
      * 设置markdown内容
@@ -57759,9 +57805,51 @@ var TheEditor = /** @class */ (function () {
     TheEditor.prototype.getTOC = function () {
         return this.toc;
     };
+    /**
+     * 更新HTML和TOC
+     */
     TheEditor.prototype.updateHTML = function () {
         this.toc = [];
         this.html = marked_1(this.codemirrorEditor.getValue());
+    };
+    /**
+     * 粘贴图片自动上传
+     */
+    TheEditor.prototype.initPaseImage = function () {
+        var _this = this;
+        this.codemirrorEditor.on('paste', function (editor, event) {
+            if (!event.clipboardData) {
+                return;
+            }
+            var types = event.clipboardData.types;
+            if (types.length > 1 || !types.includes('Files')) {
+                // 粘贴内容中包含文件以外的其他类型数据，则不处理图片
+                return;
+            }
+            var images = Array.from(event.clipboardData.files).filter(function (f) { return /image\/.*/gi.test(f.type); });
+            if (!images.length) {
+                return;
+            }
+            if (!_this.options.imageUploadAdaptor) {
+                console.warn('[The Editor] 请在选项中提供imageUploadAdaptor');
+                return;
+            }
+            event.preventDefault();
+            editor.execCommand('newlineAndIndent');
+            editor.replaceSelection('![正在上传...](...)');
+            var res = _this.options.imageUploadAdaptor.upload(images);
+            var appendImages = function (urls) {
+                var str = urls.map(function (u) { return "![](" + u + ")"; }).join('\n');
+                editor.execCommand('undo');
+                editor.replaceSelection(str);
+            };
+            if (res instanceof Promise) {
+                res.then(appendImages);
+            }
+            else {
+                appendImages(res);
+            }
+        });
     };
     TheEditor.defaultOptions = {
         lineNumbers: true,
@@ -57778,7 +57866,7 @@ var TheEditor = /** @class */ (function () {
                 '|',
                 'ul', 'ol', 'line',
                 '|',
-                'link',
+                'link', 'inline-code', 'code-block', 'image', 'datetime',
                 '|',
                 'preview',
             ]
