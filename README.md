@@ -1,5 +1,6 @@
 # The Editor
 
+![build](https://github.com/YES-Lee/the-editor/workflows/Build/badge.svg)
 ![version](https://img.shields.io/npm/v/the-editor)
 ![miniziped](https://img.shields.io/bundlephobia/minzip/the-editor)
 ![total downloads](https://img.shields.io/npm/dt/the-editor)
