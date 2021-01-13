@@ -34,6 +34,7 @@
 .the_editor--label {
   opacity: .8;
   margin-right: 6px;
+  cursor: pointer;
 
   &_file_input {
     display: inline-block;
@@ -60,4 +61,7 @@
   outline: none;
   border-radius: 2px;
   border: 1px solid #eee;
+  &[type="radio"] {
+    cursor: pointer;
+  }
 }

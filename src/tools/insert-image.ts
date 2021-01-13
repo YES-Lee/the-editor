@@ -10,11 +10,11 @@ export const InsertImage: Tool = {
         <label for="the_editor--tool_image--des" class="the_editor--label">图片描述</label>
         <input style="flex: auto;" id="the_editor--tool_image--des" class="the_editor--input">
       </div>
-      <div style="margin-top: 8px; display: flex; align-items: center;">
+      <div style="margin-top: 1rem; display: flex; align-items: center;">
         <label for="the_editor--tool_image--url" class="the_editor--label">图片链接</label>
         <input style="flex: auto;" id="the_editor--tool_image--url" class="the_editor--input" value="https://">
       </div>
-      <div style="margin-top: 8px; text-align: right;">
+      <div style="margin-top: 1rem; text-align: right;">
         <label for="the_editor--tool_image--file_input" class="the_editor--label_file_input">上传图片</label>
         <input id="the_editor--tool_image--file_input" style="display: none;" type="file" accept="image/*" >
       </div>

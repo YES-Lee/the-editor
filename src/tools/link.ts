@@ -10,7 +10,7 @@ export const Link: Tool = {
         <label for="the_editor--tool_link--title" class="the_editor--label">链接标题</label>
         <input style="flex: auto;" id="the_editor--tool_link--title" class="the_editor--input">
       </div>
-      <div style="margin-top: 8px; display: flex; align-items: center;">
+      <div style="margin-top: 1rem; display: flex; align-items: center;">
         <label for="the_editor--tool_link--url" class="the_editor--label">链接地址</label>
         <input style="flex: auto;" id="the_editor--tool_link--url" class="the_editor--input" value="https://">
       </div>

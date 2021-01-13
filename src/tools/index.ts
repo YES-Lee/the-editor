@@ -9,6 +9,7 @@ import { Link } from './link';
 import { CodeBlock } from './code-block';
 import { InsertImage } from './insert-image';
 import { Datetime } from './datetime';
+import { Table } from './table';
 
 export const builtinTools = new Map()
 
@@ -32,4 +33,5 @@ builtinTools.set('inline-code', new Enclose('行内代码', '`', 'code'));
 builtinTools.set('code-block', CodeBlock);
 builtinTools.set('image', InsertImage);
 builtinTools.set('datetime', Datetime);
+builtinTools.set('table', Table);
 builtinTools.set('preview', Preview);
