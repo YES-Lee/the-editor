@@ -1,11 +1,12 @@
 import { TheEditor } from '../editor';
 import { Tool } from '../interfaces/tool';
 
-export const Line: Tool = {
-  name: '横线',
-  icon: 'minus',
+export const Datetime: Tool = {
+  name: '插入时间',
+  icon: 'clock',
   action: (editor: TheEditor) => {
     const cm = editor.codemirrorEditor;
-    cm.replaceSelection('\n\n---\n\n')
+    const date = new Date();
+    cm.replaceSelection(date.toLocaleString())
   }
 }

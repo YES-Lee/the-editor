@@ -6,6 +6,9 @@ import { List } from './list';
 import { Line } from './line';
 import { Preview } from './preview';
 import { Link } from './link';
+import { CodeBlock } from './code-block';
+import { InsertImage } from './insert-image';
+import { Datetime } from './datetime';
 
 export const builtinTools = new Map()
 
@@ -26,4 +29,7 @@ builtinTools.set('ol', new List('有序列表', 'ol'));
 builtinTools.set('line', Line);
 builtinTools.set('link', Link);
 builtinTools.set('inline-code', new Enclose('行内代码', '`', 'code'));
+builtinTools.set('code-block', CodeBlock);
+builtinTools.set('image', InsertImage);
+builtinTools.set('datetime', Datetime);
 builtinTools.set('preview', Preview);

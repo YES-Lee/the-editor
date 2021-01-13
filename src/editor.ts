@@ -12,7 +12,7 @@ import hljs from 'highlight.js'
 import type { Options, TOC } from './types';
 
 import './styles/index.scss';
-import { Modal, ModalConfig } from './modal';
+import { Dialog, DialogConfig } from './Dialog';
 
 export class TheEditor {
   static defaultOptions: Options = {
@@ -30,7 +30,7 @@ export class TheEditor {
         '|',
         'ul', 'ol', 'line',
         '|',
-        'link', 'inline-code',
+        'link', 'inline-code', 'code-block', 'image', 'datetime',
         '|',
         'preview',
       ]
@@ -39,6 +39,7 @@ export class TheEditor {
   private eventListeners: { [key: string]: any } = {};
   private toc: TOC = [];
   private html: string = '';
+  private dialog?: Dialog;
   codemirrorEditor: Codemirror.Editor;
   options: Options;
   host: HTMLElement;
@@ -98,6 +99,8 @@ export class TheEditor {
     }
     this.previewer = new Previewer(this)
 
+    this.initPaseImage();
+
     this.emit('change', this.codemirrorEditor.getValue())
 
     this.codemirrorEditor.on('change', (editor) => {
@@ -107,40 +110,6 @@ export class TheEditor {
 
     this.codemirrorEditor.on('scroll', (editor) => {
       this.emit('scroll', editor.getScrollInfo());
-    })
-
-    this.codemirrorEditor.on('paste', (editor, event) => {
-      if (!event.clipboardData) {
-        return
-      }
-      const types = event.clipboardData.types
-      if (types.length > 1 || !types.includes('Files')) {
-        // 粘贴内容中包含文件以外的其他类型数据，则不处理图片
-        return
-      }
-      const images = Array.from(event.clipboardData.files).filter(f => /image\/.*/gi.test(f.type))
-      if (!images.length) {
-        return
-      }
-      if (!this.options.imageUploadAdaptor) {
-        console.warn('[The Editor] 请在选项中提供imageUploadAdaptor')
-        return
-      }
-      event.preventDefault()
-      editor.execCommand('newlineAndIndent')
-      const startCursor = editor.getCursor()
-      editor.replaceSelection('![正在上传...](...)')
-      const endCursor = editor.getCursor()
-      const res = this.options.imageUploadAdaptor.upload(images)
-      const appendImages = (urls: string[]) => {
-        const str = urls.map(u => `![](${u})`).join('\n')
-        editor.replaceRange(str, startCursor, endCursor)
-      }
-      if (res instanceof Promise) {
-        res.then(appendImages)
-      } else {
-        appendImages(res)
-      }
     })
   }
 
@@ -174,13 +143,26 @@ export class TheEditor {
     })
   }
 
+  /**
+   * 按比例滚动
+   * @param percent 滚动比例
+   */
   scrollToPercent(percent: number): void {
     const scrollInfo = this.codemirrorEditor.getScrollInfo()
     this.codemirrorEditor.scrollTo(0, percent * (scrollInfo.height - scrollInfo.clientHeight))
   }
 
-  openModal(config: ModalConfig) {
-    return new Modal(config);
+  /**
+   * 显示对话框
+   * @param config 对话框配置
+   */
+  openDialog(config: DialogConfig): void {
+    this.dialog = new Dialog(config);
+  }
+
+  closeDialog(): void {
+    this.dialog?.close();
+    this.codemirrorEditor.focus();
   }
 
   /**
@@ -212,8 +194,49 @@ export class TheEditor {
     return this.toc;
   }
 
+  /**
+   * 更新HTML和TOC
+   */
   private updateHTML(): void {
     this.toc = [];
     this.html = marked(this.codemirrorEditor.getValue())
+  }
+
+  /**
+   * 粘贴图片自动上传
+   */
+  private initPaseImage(): void {
+    this.codemirrorEditor.on('paste', (editor, event) => {
+      if (!event.clipboardData) {
+        return
+      }
+      const types = event.clipboardData.types
+      if (types.length > 1 || !types.includes('Files')) {
+        // 粘贴内容中包含文件以外的其他类型数据，则不处理图片
+        return
+      }
+      const images = Array.from(event.clipboardData.files).filter(f => /image\/.*/gi.test(f.type))
+      if (!images.length) {
+        return
+      }
+      if (!this.options.imageUploadAdaptor) {
+        console.warn('[The Editor] 请在选项中提供imageUploadAdaptor')
+        return
+      }
+      event.preventDefault()
+      editor.execCommand('newlineAndIndent')
+      editor.replaceSelection('![正在上传...](...)')
+      const res = this.options.imageUploadAdaptor.upload(images)
+      const appendImages = (urls: string[]) => {
+        const str = urls.map(u => `![](${u})`).join('\n')
+        editor.execCommand('undo')
+        editor.replaceSelection(str)
+      }
+      if (res instanceof Promise) {
+        res.then(appendImages)
+      } else {
+        appendImages(res)
+      }
+    })
   }
 }

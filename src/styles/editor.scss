@@ -34,6 +34,24 @@
 .the_editor--label {
   opacity: .8;
   margin-right: 6px;
+
+  &_file_input {
+    display: inline-block;
+    padding: .5rem .8rem;
+    border-radius: 2px;
+    border: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color .2s ease-in-out;
+    font-size: 14px;
+
+    &:hover {
+      background-color: #fafafa;
+    }
+
+    &:active {
+      background-color: #efefef;
+    }
+  }
 }
 
 .the_editor--input {

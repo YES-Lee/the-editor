@@ -7,12 +7,13 @@ import { Previewer } from './previewer';
 import { Toolbar } from './toolbar';
 import type { Options, TOC } from './types';
 import './styles/index.scss';
-import { Modal, ModalConfig } from './modal';
+import { DialogConfig } from './Dialog';
 export declare class TheEditor {
     static defaultOptions: Options;
     private eventListeners;
     private toc;
     private html;
+    private dialog?;
     codemirrorEditor: Codemirror.Editor;
     options: Options;
     host: HTMLElement;
@@ -29,8 +30,17 @@ export declare class TheEditor {
     off(event: string, handler: any): void;
     emit(event: 'change', value: string): void;
     emit(event: 'scroll', scrollInfo: ScrollInfo): void;
+    /**
+     * 按比例滚动
+     * @param percent 滚动比例
+     */
     scrollToPercent(percent: number): void;
-    openModal(config: ModalConfig): Modal;
+    /**
+     * 显示对话框
+     * @param config 对话框配置
+     */
+    openDialog(config: DialogConfig): void;
+    closeDialog(): void;
     /**
      * 设置markdown内容
      * @param markdown markdown文本
@@ -48,5 +58,12 @@ export declare class TheEditor {
      * 获取TOC
      */
     getTOC(): TOC;
+    /**
+     * 更新HTML和TOC
+     */
     private updateHTML;
+    /**
+     * 粘贴图片自动上传
+     */
+    private initPaseImage;
 }

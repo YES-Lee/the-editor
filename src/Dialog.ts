@@ -1,4 +1,4 @@
-export type ModalConfig = {
+export type DialogConfig = {
   title: string;
   content: string | HTMLElement;
   actions?: Array<{
@@ -8,29 +8,29 @@ export type ModalConfig = {
   onClose?: () => void;
 };
 
-export class Modal {
-  config: ModalConfig;
+export class Dialog {
+  config: DialogConfig;
   container: HTMLElement;
-  modal: HTMLElement;
+  dialog: HTMLElement;
 
-  constructor(config: ModalConfig) {
+  constructor(config: DialogConfig) {
     this.config = config;
     this.container = document.createElement('div')
-    this.container.className = 'the_editor_modal'
-    this.modal = this.create();
-    this.container.appendChild(this.modal);
+    this.container.className = 'the_editor_dialog'
+    this.dialog = this.create();
+    this.container.appendChild(this.dialog);
     document.body.appendChild(this.container)
 
-    const rect = this.modal.getBoundingClientRect()
-    this.modal.style.left = `${(window.innerWidth - rect.width) / 2}px`
-    this.modal.style.top = `${(window.innerHeight - rect.height) / 2}px`
+    const rect = this.dialog.getBoundingClientRect()
+    this.dialog.style.left = `${(window.innerWidth - rect.width) / 2}px`
+    this.dialog.style.top = `${(window.innerHeight - rect.height) / 2}px`
   }
 
   private create(): HTMLElement {
-    const modalBody = document.createElement('div');
+    const dialogBody = document.createElement('div');
     const content = document.createElement('div');
-    modalBody.className = 'the_editor_modal--body';
-    content.className = 'the_editor_modal--content'
+    dialogBody.className = 'the_editor_dialog--body';
+    content.className = 'the_editor_dialog--content'
 
     if (typeof this.config.content === 'string') {
       content.innerHTML = this.config.content;
@@ -39,24 +39,24 @@ export class Modal {
       content.appendChild(this.config.content)
     }
 
-    this.createHeader(modalBody);
-    modalBody.appendChild(content)
-    this.createRooter(modalBody);
+    this.createHeader(dialogBody);
+    dialogBody.appendChild(content)
+    this.createRooter(dialogBody);
 
-    return modalBody;
+    return dialogBody;
   }
 
-  private createHeader(modal: HTMLElement): void {
+  private createHeader(dialog: HTMLElement): void {
     const header = document.createElement('div');
-    header.className = 'the_editor_modal--header'
+    header.className = 'the_editor_dialog--header'
     const titleEl = document.createElement('span')
-    titleEl.className = 'the_editor_modal--header_title'
+    titleEl.className = 'the_editor_dialog--header_title'
     titleEl.innerText = this.config.title
     const closeIcon = document.createElement('span')
-    closeIcon.className = 'the_editor_modal--header_close fa fa-times'
+    closeIcon.className = 'the_editor_dialog--header_close fa fa-times'
     header.appendChild(titleEl)
     header.appendChild(closeIcon)
-    modal.appendChild(header)
+    dialog.appendChild(header)
 
     closeIcon.addEventListener('click', () => {
       if (typeof this.config.onClose === 'function') {
@@ -71,7 +71,7 @@ export class Modal {
     }
 
     const move = ($e: MouseEvent) => {
-      const rect = this.modal.getBoundingClientRect()
+      const rect = this.dialog.getBoundingClientRect()
       let dX = $e.pageX - lastCursorPos.x + rect.x;
       let dY = $e.pageY - lastCursorPos.y + rect.y;
       const mX = window.innerWidth - rect.width // 最大
@@ -95,8 +95,8 @@ export class Modal {
       if (dY >= mY) {
         dY = mY
       }
-      this.modal.style.left = `${dX}px`;
-      this.modal.style.top = `${dY}px`;
+      this.dialog.style.left = `${dX}px`;
+      this.dialog.style.top = `${dY}px`;
     };
     header.addEventListener('mousedown', ($e) => {
       lastCursorPos.x = $e.pageX
@@ -108,14 +108,14 @@ export class Modal {
     })
   }
 
-  private createRooter(modal: HTMLElement): void {
+  private createRooter(dialog: HTMLElement): void {
     if (this.config.actions?.length) {
       const footer = document.createElement('footer');
-      footer.className = 'the_editor_modal--footer';
-      modal.appendChild(footer);
+      footer.className = 'the_editor_dialog--footer';
+      dialog.appendChild(footer);
       this.config.actions.forEach(item => {
         const actionButton = document.createElement('button')
-        actionButton.className = 'the_editor_modal--footer_action_button';
+        actionButton.className = 'the_editor_dialog--footer_action_button';
         actionButton.innerText = item.title;
         if (typeof item.action === 'function') {
           actionButton.addEventListener('click', item.action);

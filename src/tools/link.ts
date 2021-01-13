@@ -17,18 +17,18 @@ export const Link: Tool = {
     `
     const container = document.createElement('div')
     container.innerHTML = template
-    const modal = editor.openModal({
+    editor.openDialog({
       title: '添加链接',
       content: container,
       actions: [
         {
           title: '确定',
           action: () => {
-            const title = (container.querySelector('#the_editor--tool_link--title') as HTMLInputElement )?.value || ''
-            const url = (container.querySelector('#the_editor--tool_link--url') as HTMLInputElement)?.value || ''
+            const title = container.querySelector<HTMLInputElement>('#the_editor--tool_link--title')?.value || ''
+            const url = container.querySelector<HTMLInputElement>('#the_editor--tool_link--url')?.value || ''
             const str = `[${title || url}](${url})`
             editor.codemirrorEditor.replaceSelection(str)
-            modal.close()
+            editor.closeDialog()
           }
         }
       ]
