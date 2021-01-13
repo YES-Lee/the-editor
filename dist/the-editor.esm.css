@@ -480,6 +480,7 @@
 .the_editor--label {
   opacity: 0.8;
   margin-right: 6px;
+  cursor: pointer;
 }
 .the_editor--label_file_input {
   display: inline-block;
@@ -503,6 +504,9 @@
   outline: none;
   border-radius: 2px;
   border: 1px solid #eee;
+}
+.the_editor--input[type=radio] {
+  cursor: pointer;
 }
 
 .the_editor {

@@ -1,5 +1,5 @@
 /*!
- * the-editor.js v0.0.8
+ * the-editor.js v0.0.9
  * Copyright (c) 2020-2021 Johnson
  * Released under the MIT License.
  */
@@ -12086,7 +12086,7 @@ var Link = {
     name: '链接',
     icon: 'link',
     action: function (editor) {
-        var template = "\n      <div style=\"display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_link--title\" class=\"the_editor--label\">\u94FE\u63A5\u6807\u9898</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_link--title\" class=\"the_editor--input\">\n      </div>\n      <div style=\"margin-top: 8px; display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_link--url\" class=\"the_editor--label\">\u94FE\u63A5\u5730\u5740</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_link--url\" class=\"the_editor--input\" value=\"https://\">\n      </div>\n    ";
+        var template = "\n      <div style=\"display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_link--title\" class=\"the_editor--label\">\u94FE\u63A5\u6807\u9898</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_link--title\" class=\"the_editor--input\">\n      </div>\n      <div style=\"margin-top: 1rem; display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_link--url\" class=\"the_editor--label\">\u94FE\u63A5\u5730\u5740</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_link--url\" class=\"the_editor--input\" value=\"https://\">\n      </div>\n    ";
         var container = document.createElement('div');
         container.innerHTML = template;
         editor.openDialog({
@@ -12127,7 +12127,7 @@ var InsertImage = {
     name: '插入图片',
     icon: 'image',
     action: function (editor) {
-        var template = "\n      <div style=\"display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_image--des\" class=\"the_editor--label\">\u56FE\u7247\u63CF\u8FF0</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_image--des\" class=\"the_editor--input\">\n      </div>\n      <div style=\"margin-top: 8px; display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_image--url\" class=\"the_editor--label\">\u56FE\u7247\u94FE\u63A5</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_image--url\" class=\"the_editor--input\" value=\"https://\">\n      </div>\n      <div style=\"margin-top: 8px; text-align: right;\">\n        <label for=\"the_editor--tool_image--file_input\" class=\"the_editor--label_file_input\">\u4E0A\u4F20\u56FE\u7247</label>\n        <input id=\"the_editor--tool_image--file_input\" style=\"display: none;\" type=\"file\" accept=\"image/*\" >\n      </div>\n    ";
+        var template = "\n      <div style=\"display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_image--des\" class=\"the_editor--label\">\u56FE\u7247\u63CF\u8FF0</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_image--des\" class=\"the_editor--input\">\n      </div>\n      <div style=\"margin-top: 1rem; display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_image--url\" class=\"the_editor--label\">\u56FE\u7247\u94FE\u63A5</label>\n        <input style=\"flex: auto;\" id=\"the_editor--tool_image--url\" class=\"the_editor--input\" value=\"https://\">\n      </div>\n      <div style=\"margin-top: 1rem; text-align: right;\">\n        <label for=\"the_editor--tool_image--file_input\" class=\"the_editor--label_file_input\">\u4E0A\u4F20\u56FE\u7247</label>\n        <input id=\"the_editor--tool_image--file_input\" style=\"display: none;\" type=\"file\" accept=\"image/*\" >\n      </div>\n    ";
         var container = document.createElement('div');
         container.innerHTML = template;
         var imageDesInput = container.querySelector('#the_editor--tool_image--des');
@@ -12177,6 +12177,46 @@ var Datetime = {
     }
 };
 
+var Table = {
+    name: '表格',
+    icon: 'table',
+    action: function (editor) {
+        var template = "\n      <div style=\"display: flex; align-items: center;\">\n        <label for=\"the_editor--tool_table--row\" class=\"the_editor--label\">\u884C</label>\n        <input name=\"row\" style=\"flex: auto;\" id=\"the_editor--tool_table--row\" class=\"the_editor--input\" type=\"number\" value=\"1\" min=\"1\">\n        <div style=\"width: 1rem; flex: none;\"></div>\n        <label for=\"the_editor--tool_table--column\" class=\"the_editor--label\">\u884C</label>\n        <input name=\"column\" style=\"flex: auto;\" id=\"the_editor--tool_table--column\" class=\"the_editor--input\" type=\"number\" value=\"2\" min=\"2\">\n      </div>\n      <div style=\"margin-top: 1rem;\">\n        <label class=\"the_editor--label\">\u5BF9\u9F50\u65B9\u5F0F</label>\n        <input name=\"align\" value=\"justify\" style=\"flex: auto;\" type=\"radio\" checked id=\"the_editor--tool_table--align_justify\" class=\"the_editor--input\">\n        <label for=\"the_editor--tool_table--align_justify\" class=\"the_editor--label fa fa-align-justify\"></label>\n        <input name=\"align\" value=\"left\" style=\"flex: auto;\" type=\"radio\" id=\"the_editor--tool_table--align_left\" class=\"the_editor--input\">\n        <label for=\"the_editor--tool_table--align_left\" class=\"the_editor--label fa fa-align-left\"></label>\n        <input name=\"align\" value=\"center\" style=\"flex: auto;\" type=\"radio\" id=\"the_editor--tool_table--align_center\" class=\"the_editor--input\">\n        <label for=\"the_editor--tool_table--align_center\" class=\"the_editor--label fa fa-align-center\"></label>\n        <input name=\"align\" value=\"right\" style=\"flex: auto;\" type=\"radio\" id=\"the_editor--tool_table--align_right\" class=\"the_editor--input\">\n        <label for=\"the_editor--tool_table--align_right\" class=\"the_editor--label fa fa-align-right\"></label>\n      </div>\n    ";
+        var container = document.createElement('form');
+        container.innerHTML = template;
+        editor.openDialog({
+            title: '插入表格',
+            content: container,
+            actions: [
+                {
+                    title: '确定',
+                    action: function () {
+                        var alignTokens = {
+                            justify: '---',
+                            left: ':---',
+                            center: ':---:',
+                            right: '---:'
+                        };
+                        var formData = new FormData(container);
+                        var row = +formData.get('row');
+                        var column = +formData.get('column');
+                        var align = formData.get('align');
+                        var table = new Array(row + 2);
+                        table[0] = new Array(column).fill('标题');
+                        table[1] = new Array(column).fill(alignTokens[align]);
+                        for (var i = 2; i < column + 2; i++) {
+                            table[i] = new Array(column).fill('  ');
+                        }
+                        var tableStr = table.map(function (r) { return "|" + r.join('|') + "|"; }).join('\n');
+                        editor.codemirrorEditor.replaceSelection(tableStr);
+                        editor.closeDialog();
+                    }
+                }
+            ]
+        });
+    }
+};
+
 var builtinTools = new Map();
 builtinTools.set('undo', Undo);
 builtinTools.set('redo', Redo);
@@ -12198,6 +12238,7 @@ builtinTools.set('inline-code', new Enclose('行内代码', '`', 'code'));
 builtinTools.set('code-block', CodeBlock);
 builtinTools.set('image', InsertImage);
 builtinTools.set('datetime', Datetime);
+builtinTools.set('table', Table);
 builtinTools.set('preview', Preview);
 
 var Toolbar = /** @class */ (function () {
@@ -57868,7 +57909,7 @@ var TheEditor = /** @class */ (function () {
                 '|',
                 'ul', 'ol', 'line',
                 '|',
-                'link', 'inline-code', 'code-block', 'image', 'datetime',
+                'link', 'inline-code', 'code-block', 'table', 'image', 'datetime',
                 '|',
                 'preview',
             ]
