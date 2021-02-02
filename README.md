@@ -66,8 +66,8 @@ export default {
 ### 通过jsdelivr引入
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/the-editor@0.0.9/dist/the-editor.min.css">
-<script src="https://cdn.jsdelivr.net/npm/the-editor@0.0.9/dist/the-editor.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/the-editor@0.0.10/dist/the-editor.min.css">
+<script src="https://cdn.jsdelivr.net/npm/the-editor@0.0.10/dist/the-editor.min.js"></script>
 ```
 
 ## 选项列表
