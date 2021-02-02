@@ -3,22 +3,31 @@ import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/markdown-fold';
 import 'codemirror/mode/markdown/markdown';
 import 'codemirror/mode/gfm/gfm';
-import { Previewer } from './previewer'
-import { Toolbar } from './toolbar'
-
 import marked from 'marked';
 import hljs from 'highlight.js'
 
+import { Plugin } from './interfaces';
+import { Toolbar, Previewer } from './plugins'
 import type { Options, TOC } from './types';
-
+import { Dialog, DialogConfig } from './dialog';
 import './styles/index.scss';
-import { Dialog, DialogConfig } from './Dialog';
 
+/**
+ * TheEditor构造函数
+ */
 export class TheEditor {
+  static builtInPlugins: Record<string, Function> = {
+    Previewer,
+    Toolbar
+  }
+  /**
+   * 编辑器默认配置
+   */
   static defaultOptions: Options = {
     lineNumbers: true,
     tabSize: 2,
     gfm: true,
+    plugins: [new Previewer(), new Toolbar()],
     toolbar: {
       visible: true,
       items: [
@@ -40,11 +49,22 @@ export class TheEditor {
   private toc: TOC = [];
   private html: string = '';
   private dialog?: Dialog;
-  codemirrorEditor: Codemirror.Editor;
+  /**
+   * 插件实例
+   */
+  plugins: Map<string, Plugin> = new Map();
+  /**
+   * codemirror实例
+   */
+  $codemirror: Codemirror.Editor;
+  /**
+   * TheEditor选项
+   */
   options: Options;
+  /**
+   * 编辑器根节点
+   */
   host: HTMLElement;
-  toolbar?: Toolbar;
-  previewer?: Previewer;
   /**
    * The Editor构造函数
    * @param host 宿主元素
@@ -82,7 +102,7 @@ export class TheEditor {
       xhtml: false
     })
 
-    this.codemirrorEditor = Codemirror(host, {
+    this.$codemirror = Codemirror(host, {
       mode: this.options.gfm ? 'gfm' : 'markdown',
       lineNumbers: this.options?.lineNumbers,
       tabSize: this.options?.tabSize,
@@ -94,27 +114,29 @@ export class TheEditor {
     });
     this.updateHTML();
 
-    if (this.options.toolbar?.visible) {
-      this.toolbar = new Toolbar(this);
-    }
-    this.previewer = new Previewer(this)
+    this.installPlugins();
 
     this.initPaseImage();
 
-    this.emit('change', this.codemirrorEditor.getValue())
+    this.emit('change', this.$codemirror.getValue())
 
-    this.codemirrorEditor.on('change', (editor) => {
+    this.$codemirror.on('change', (editor) => {
       this.updateHTML();
       this.emit('change', editor.getValue())
     })
 
-    this.codemirrorEditor.on('scroll', (editor) => {
+    this.$codemirror.on('scroll', (editor) => {
       this.emit('scroll', editor.getScrollInfo());
     })
   }
 
   on(event: 'change', handler: (value: string) => void): void;
   on(event: 'scroll', handler: (scrollInfo: ScrollInfo) => void): void;
+  /**
+   * 设置事件监听
+   * @param event 事件名称
+   * @param handler 处理函数
+   */
   on(event: string, handler: any): void {
     if (!this.eventListeners[event]) {
       this.eventListeners[event] = []
@@ -124,6 +146,11 @@ export class TheEditor {
     }
   }
 
+  /**
+   * 取消监听事件
+   * @param event 事件名称
+   * @param handler 处理函数
+   */
   off(event: string, handler: any): void {
     const listeners = this.eventListeners[event]
     if (listeners && listeners.length) {
@@ -136,6 +163,11 @@ export class TheEditor {
 
   emit(event: 'change', value: string): void;
   emit(event: 'scroll', scrollInfo: ScrollInfo): void;
+  /**
+   * 发布事件
+   * @param event 事件名称
+   * @param value 事件数据
+   */
   emit(event: string, value: any): void {
     const listeners = this.eventListeners[event] || []
     listeners.forEach((fn: (value: any) => void) => {
@@ -148,8 +180,8 @@ export class TheEditor {
    * @param percent 滚动比例
    */
   scrollToPercent(percent: number): void {
-    const scrollInfo = this.codemirrorEditor.getScrollInfo()
-    this.codemirrorEditor.scrollTo(0, percent * (scrollInfo.height - scrollInfo.clientHeight))
+    const scrollInfo = this.$codemirror.getScrollInfo()
+    this.$codemirror.scrollTo(0, percent * (scrollInfo.height - scrollInfo.clientHeight))
   }
 
   /**
@@ -160,9 +192,12 @@ export class TheEditor {
     this.dialog = new Dialog(config);
   }
 
+  /**
+   * 关闭对话框
+   */
   closeDialog(): void {
     this.dialog?.close();
-    this.codemirrorEditor.focus();
+    this.$codemirror.focus();
   }
 
   /**
@@ -170,14 +205,14 @@ export class TheEditor {
    * @param markdown markdown文本
    */
   setValue(markdown: string): void {
-    this.codemirrorEditor.setValue(markdown);
+    this.$codemirror.setValue(markdown);
   }
 
   /**
    * 获取markdown内容
    */
   getValue(): string {
-    return this.codemirrorEditor.getValue();
+    return this.$codemirror.getValue();
   }
 
   /**
@@ -199,14 +234,14 @@ export class TheEditor {
    */
   private updateHTML(): void {
     this.toc = [];
-    this.html = marked(this.codemirrorEditor.getValue())
+    this.html = marked(this.$codemirror.getValue())
   }
 
   /**
    * 粘贴图片自动上传
    */
   private initPaseImage(): void {
-    this.codemirrorEditor.on('paste', (editor, event) => {
+    this.$codemirror.on('paste', (editor, event) => {
       if (!event.clipboardData) {
         return
       }
@@ -236,6 +271,24 @@ export class TheEditor {
         res.then(appendImages)
       } else {
         appendImages(res)
+      }
+    })
+  }
+
+  /**
+   * 安装插件
+   * @param PluginFn 插件
+   */
+  private installPlugins() {
+    const plugins = this.options.plugins || []
+    plugins.forEach(plugin => {
+      try {
+        if (!this.plugins.has(plugin.name)) {
+          this.plugins.set(plugin.name, plugin)
+          plugin.install(this, this.options[plugin.name.toLowerCase()] || {})
+        }
+      } catch (err) {
+        console.error(err)
       }
     })
   }

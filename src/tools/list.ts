@@ -1,5 +1,5 @@
 import { TheEditor } from '../editor';
-import { Tool } from '../interfaces/tool';
+import { Tool } from '../interfaces';
 
 export class List implements Tool {
   name: string;
@@ -11,7 +11,7 @@ export class List implements Tool {
     this.icon = 'list-' + type
 
     this.action = (editor: TheEditor) => {
-      const cm = editor.codemirrorEditor;
+      const cm = editor.$codemirror;
       const selection = cm.getSelection();
 
       if (selection === '') {

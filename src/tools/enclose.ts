@@ -1,5 +1,5 @@
 import { TheEditor } from '../editor';
-import { Tool } from '../interfaces/tool';
+import { Tool } from '../interfaces';
 
 export class Enclose implements Tool {
   name: string;
@@ -11,7 +11,7 @@ export class Enclose implements Tool {
     this.icon = icon;
 
     this.action = (editor: TheEditor) => {
-      const cm = editor.codemirrorEditor;
+      const cm = editor.$codemirror;
       const cursor = cm.getCursor()
       const selections = cm.getSelections()
       cm.replaceSelections(selections.map(s => `${key}${s}${key}`))

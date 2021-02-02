@@ -1,5 +1,4 @@
-import { ImageUploadAdaptor } from './interfaces/image-upload-adaptor';
-import { Tool } from './interfaces/tool';
+import { Plugin, Tool, ImageUploadAdaptor } from './interfaces';
 
 export type Options = {
   gfm?: boolean;
@@ -7,11 +6,12 @@ export type Options = {
   lineNumbers?: boolean;
   tabSize?: number;
   imageUploadAdaptor?: ImageUploadAdaptor;
+  plugins?: Plugin[];
   toolbar?: {
     visible: boolean;
     items: Array<string | Tool>
   };
-}
+} & Record<string, any>;
 
 export type TOC = Array<{
   anchor: string;

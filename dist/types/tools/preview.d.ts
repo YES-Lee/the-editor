@@ -1,2 +1,2 @@
-import { Tool } from '../interfaces/tool';
+import { Tool } from '../interfaces';
 export declare const Preview: Tool;

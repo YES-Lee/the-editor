@@ -1,5 +1,5 @@
 import { TheEditor } from '../editor';
-import { Tool } from '../interfaces/tool';
+import { Tool } from '../interfaces';
 
 export class PadStart implements Tool {
   name: string;
@@ -11,7 +11,7 @@ export class PadStart implements Tool {
     this.icon = icon;
 
     this.action = (editor: TheEditor) => {
-      const cm = editor.codemirrorEditor;
+      const cm = editor.$codemirror;
       cm.replaceRange(key, {
         line: cm.getCursor().line,
         ch: 0

@@ -3,22 +3,39 @@ import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/markdown-fold';
 import 'codemirror/mode/markdown/markdown';
 import 'codemirror/mode/gfm/gfm';
-import { Previewer } from './previewer';
-import { Toolbar } from './toolbar';
+import { Plugin } from './interfaces';
 import type { Options, TOC } from './types';
+import { DialogConfig } from './dialog';
 import './styles/index.scss';
-import { DialogConfig } from './Dialog';
+/**
+ * TheEditor构造函数
+ */
 export declare class TheEditor {
+    static builtInPlugins: Record<string, Function>;
+    /**
+     * 编辑器默认配置
+     */
     static defaultOptions: Options;
     private eventListeners;
     private toc;
     private html;
     private dialog?;
-    codemirrorEditor: Codemirror.Editor;
+    /**
+     * 插件实例
+     */
+    plugins: Map<string, Plugin>;
+    /**
+     * codemirror实例
+     */
+    $codemirror: Codemirror.Editor;
+    /**
+     * TheEditor选项
+     */
     options: Options;
+    /**
+     * 编辑器根节点
+     */
     host: HTMLElement;
-    toolbar?: Toolbar;
-    previewer?: Previewer;
     /**
      * The Editor构造函数
      * @param host 宿主元素
@@ -27,6 +44,11 @@ export declare class TheEditor {
     constructor(host: HTMLElement, options?: Options);
     on(event: 'change', handler: (value: string) => void): void;
     on(event: 'scroll', handler: (scrollInfo: ScrollInfo) => void): void;
+    /**
+     * 取消监听事件
+     * @param event 事件名称
+     * @param handler 处理函数
+     */
     off(event: string, handler: any): void;
     emit(event: 'change', value: string): void;
     emit(event: 'scroll', scrollInfo: ScrollInfo): void;
@@ -40,6 +62,9 @@ export declare class TheEditor {
      * @param config 对话框配置
      */
     openDialog(config: DialogConfig): void;
+    /**
+     * 关闭对话框
+     */
     closeDialog(): void;
     /**
      * 设置markdown内容
@@ -66,4 +91,9 @@ export declare class TheEditor {
      * 粘贴图片自动上传
      */
     private initPaseImage;
+    /**
+     * 安装插件
+     * @param PluginFn 插件
+     */
+    private installPlugins;
 }

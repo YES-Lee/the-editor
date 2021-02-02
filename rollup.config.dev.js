@@ -6,7 +6,7 @@ import copy from 'rollup-plugin-copy'
 import serve from 'rollup-plugin-serve'
 
 export default {
-  input: 'src/index.ts', // 入口文件
+  input: 'src/umd.ts', // 入口文件
   output: {
     file: 'dev/the-editor.js',
     format: 'umd',

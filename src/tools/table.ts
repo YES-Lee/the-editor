@@ -1,5 +1,5 @@
 import { TheEditor } from '../editor';
-import { Tool } from '../interfaces/tool';
+import { Tool } from '../interfaces';
 
 export const Table: Tool = {
   name: '表格',
@@ -52,7 +52,7 @@ export const Table: Tool = {
               table[i] = new Array(column).fill('  ')
             }
             const tableStr = table.map(r => `|${r.join('|')}|`).join('\n')
-            editor.codemirrorEditor.replaceSelection(tableStr)
+            editor.$codemirror.replaceSelection(tableStr)
             editor.closeDialog();
           }
         }

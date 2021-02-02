@@ -1,5 +1,5 @@
 import { TheEditor } from '../editor';
-import { Tool } from '../interfaces/tool';
+import { Tool } from '../interfaces';
 
 export const InsertImage: Tool = {
   name: '插入图片',
@@ -48,7 +48,7 @@ export const InsertImage: Tool = {
         {
           title: '确定',
           action: () => {
-            const cm = editor.codemirrorEditor;
+            const cm = editor.$codemirror;
             cm.replaceSelection(`![${imageDesInput.value}](${imageUrlInput.value})`)
             editor.closeDialog();
           }

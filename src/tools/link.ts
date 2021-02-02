@@ -1,5 +1,5 @@
 import { TheEditor } from '../editor';
-import { Tool } from '../interfaces/tool';
+import { Tool } from '../interfaces';
 
 export const Link: Tool = {
   name: '链接',
@@ -27,7 +27,7 @@ export const Link: Tool = {
             const title = container.querySelector<HTMLInputElement>('#the_editor--tool_link--title')?.value || ''
             const url = container.querySelector<HTMLInputElement>('#the_editor--tool_link--url')?.value || ''
             const str = `[${title || url}](${url})`
-            editor.codemirrorEditor.replaceSelection(str)
+            editor.$codemirror.replaceSelection(str)
             editor.closeDialog()
           }
         }

@@ -1,4 +1,4 @@
-import { Tool } from '../interfaces/tool';
+import { Tool } from '../interfaces';
 export declare class Enclose implements Tool {
     name: string;
     icon?: string | undefined;

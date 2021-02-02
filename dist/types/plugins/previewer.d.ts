@@ -1,5 +1,5 @@
-import { TheEditor } from './editor';
-import { Plugin } from './interfaces/plugin';
+import { TheEditor } from '../editor';
+import { Plugin } from '../interfaces';
 export declare class Previewer implements Plugin {
     name: string;
     previewer: HTMLElement;

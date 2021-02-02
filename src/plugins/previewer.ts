@@ -1,21 +1,23 @@
 import { ScrollInfo } from 'codemirror';
-import { TheEditor } from './editor';
+import { TheEditor } from '../editor';
+import { Plugin } from '../interfaces';
 
-export class Previewer {
-  private previewer: HTMLElement;
-  private editor: TheEditor;
-  visible: boolean;
+export class Previewer implements Plugin {
+  name = 'Previewer';
+  previewer: HTMLElement = document.createElement('div');
+  editor: TheEditor;
+  visible: boolean = true;
+  enabled: boolean = true;
 
-  constructor(editor: TheEditor) {
+  constructor() {}
+
+  install(editor: TheEditor, options: Record<string, any>) {
     this.editor = editor;
-    this.visible = true;
-    const previewer = document.createElement('div')
-    this.previewer = previewer;
-    previewer.classList.add('the_editor--previewer', 'markdown-body')
+    this.previewer.classList.add('the_editor--previewer', 'markdown-body')
     editor.host.classList.add('the_editor_width_previewer')
-    editor.host.appendChild(previewer)
+    editor.host.appendChild(this.previewer)
     editor.on('change', () => {
-      previewer.innerHTML = editor.getHTML();
+      this.previewer.innerHTML = editor.getHTML();
     })
     this.initScroll();
   }
@@ -49,4 +51,8 @@ export class Previewer {
       this.previewer.style.display = 'none';
     }
   }
+
+  enable() {}
+
+  disable() {}
 }

@@ -1,7 +1,7 @@
-import { TheEditor } from './editor';
-import { Plugin } from './interfaces/plugin';
-import { Tool } from './interfaces/tool';
+import { TheEditor } from '../editor';
+import { Plugin, Tool } from '../interfaces';
 export declare class Toolbar implements Plugin {
+    static builtinTools: Map<string, Tool>;
     name: string;
     enabled: boolean;
     private editor;
