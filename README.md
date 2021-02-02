@@ -5,7 +5,6 @@
 ![miniziped](https://img.shields.io/bundlephobia/minzip/the-editor)
 ![total downloads](https://img.shields.io/npm/dt/the-editor)
 
-
 **The Editor**是一个极简`markdown`编辑器。仅提供了几个核心的基础API：`getValue`, `getHTML`, `getTOC`, `setValue`。配置选项也非常精简，能满足大部分的需求场景。
 
 [👉体验一下👈](https://codesandbox.io/s/the-editor-xd5sf?file=/src/App.vue)
@@ -52,7 +51,7 @@ import 'the-editor/dist/the-editor.css'; // 引入样式
   <div ref="editor">
 </template>
 <script>
-import TheEditor from 'the-editor'
+import { TheEditor } from 'the-editor'
 
 export default {
   mounted() {
