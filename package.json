@@ -1,6 +1,6 @@
 {
   "name": "the-editor",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "a markdown editor",
   "main": "dist/the-editor.js",
   "browser": "dist/the-editor.esm.js",

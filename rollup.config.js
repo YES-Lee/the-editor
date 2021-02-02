@@ -32,7 +32,6 @@ export default [
       file: pkg.main,
       format: 'cjs',
       sourcemap: true,
-      exports: 'default',
       banner
     },
     plugins: [
@@ -62,7 +61,7 @@ export default [
     ]
   },
   {
-    input: 'src/index.ts',
+    input: 'src/umd.ts',
     output: {
       file: pkg.umd,
       format: 'umd',
