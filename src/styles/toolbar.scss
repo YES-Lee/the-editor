@@ -5,20 +5,22 @@
   position: absolute;
   top: 0;
   left: 0;
-  height: get-var(toolbar-height);
-  display: flex;
+  height: fit-content;
   align-items: center;
-  flex-flow: row nowrap;
   box-sizing: border-box;
-  overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border-bottom: 1px solid get-var(border-color);
   width: 100%;
-  padding: 0 8px;
+  padding: 4px 8px;
+  z-index: 9;
+  background-color: #fff;
+
+  >span {
+    display: inline-block;
+    vertical-align: middle;
+  }
 
   .tool_item {
-    flex: none;
-    display: block;
     box-sizing: border-box;
     padding: 0 6px;
     height: 32px;
@@ -42,7 +44,6 @@
   }
 
   .tool_gutter {
-    display: block;
     height: 24px;
     width: 1px;
     background-color: get-var(border-color);

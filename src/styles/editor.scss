@@ -16,10 +16,6 @@
 
   @include scroll-bar;
 
-  &.the_editor_width_toolbar {
-    padding-top: get-var(toolbar-height);
-  }
-
   &.the_editor_width_previewer {
     display: flex;
     flex-flow: row nowrap;

@@ -1,9 +1,10 @@
 @import 'mixins';
-@import './editor.scss';
-@import './previewer.scss';
-@import './toolbar.scss';
-@import './dialog.scss';
+@import 'editor';
+@import 'previewer';
+@import 'toolbar';
+@import 'dialog';
 
+// fontawesome
 $fa-font-path: 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/webfonts';
 @import '~@fortawesome/fontawesome-free/scss/solid';
 @import '~@fortawesome/fontawesome-free/scss/regular';
@@ -11,8 +12,7 @@ $fa-font-path: 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
 
 $vars: (
-  border-color: #ddd,
-  toolbar-height: 42px
+  border-color: #ddd
 );
 
 @include set-vars($vars);

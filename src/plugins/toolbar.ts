@@ -1,3 +1,4 @@
+import ResizeObserver from 'resize-observer-polyfill';
 import { TheEditor } from '../editor';
 import { Plugin, Tool } from '../interfaces';
 import { builtinTools } from '../tools';
@@ -14,6 +15,13 @@ export class Toolbar implements Plugin {
     this.editor = editor;
     this.toolbar.className = 'the_editor--toolbar'
     editor.host.classList.add('the_editor_width_toolbar')
+    const resizeOb = new ResizeObserver(entries => {
+      const entry = entries[0]
+      if (!entry) return
+      const height = entry.target.getBoundingClientRect().height
+      editor.host.style.paddingTop = height + 'px'
+    })
+    resizeOb.observe(this.toolbar)
     editor.host.insertBefore(this.toolbar, editor.host.firstChild)
     this.createTools(options.items.map(item => builtinTools.get(item) || item).filter(item => !!item));
   }
