@@ -465,9 +465,6 @@
   background: rgba(0, 0, 0, 0.3);
   border-radius: 6px;
 }
-.the_editor.the_editor_width_toolbar {
-  padding-top: var(--the-editor-toolbar-height);
-}
 .the_editor.the_editor_width_previewer {
   display: flex;
   flex-flow: row nowrap;
@@ -1414,20 +1411,21 @@
   position: absolute;
   top: 0;
   left: 0;
-  height: var(--the-editor-toolbar-height);
-  display: flex;
+  height: fit-content;
   align-items: center;
-  flex-flow: row nowrap;
   box-sizing: border-box;
-  overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border-bottom: 1px solid var(--the-editor-border-color);
   width: 100%;
-  padding: 0 8px;
+  padding: 4px 8px;
+  z-index: 9;
+  background-color: #fff;
+}
+.the_editor--toolbar > span {
+  display: inline-block;
+  vertical-align: middle;
 }
 .the_editor--toolbar .tool_item {
-  flex: none;
-  display: block;
   box-sizing: border-box;
   padding: 0 6px;
   height: 32px;
@@ -1450,7 +1448,6 @@
   background: rgba(102, 102, 102, 0.1);
 }
 .the_editor--toolbar .tool_gutter {
-  display: block;
   height: 24px;
   width: 1px;
   background-color: var(--the-editor-border-color);
@@ -1524,7 +1521,7 @@
 }
 
 /*!
- * Font Awesome Free 5.15.1 by @fontawesome - https://fontawesome.com
+ * Font Awesome Free 5.15.2 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 @font-face {
@@ -1542,7 +1539,7 @@
 }
 
 /*!
- * Font Awesome Free 5.15.1 by @fontawesome - https://fontawesome.com
+ * Font Awesome Free 5.15.2 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 @font-face {
@@ -1559,7 +1556,7 @@
 }
 
 /*!
- * Font Awesome Free 5.15.1 by @fontawesome - https://fontawesome.com
+ * Font Awesome Free 5.15.2 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 @font-face {
@@ -1576,7 +1573,7 @@
 }
 
 /*!
- * Font Awesome Free 5.15.1 by @fontawesome - https://fontawesome.com
+ * Font Awesome Free 5.15.2 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 .fa,
@@ -7643,5 +7640,4 @@ readers do not read off random characters that represent icons */
 
 :root {
   --the-editor-border-color: #ddd;
-  --the-editor-toolbar-height: 42px;
 }
