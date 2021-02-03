@@ -6,6 +6,6 @@ export const Line: Tool = {
   icon: 'minus',
   action: (editor: TheEditor) => {
     const cm = editor.$codemirror;
-    cm.replaceSelection('\n\n---\n\n')
-  }
-}
+    cm.replaceSelection('\n\n---\n\n');
+  },
+};

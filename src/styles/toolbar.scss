@@ -15,7 +15,7 @@
   z-index: 9;
   background-color: #fff;
 
-  >span {
+  > span {
     display: inline-block;
     vertical-align: middle;
   }
@@ -31,7 +31,7 @@
     color: #666;
     border: 1px solid transparent;
     text-align: center;
-    transition: all .1s ease-in-out;
+    transition: all 0.1s ease-in-out;
     user-select: none;
     &:not(:first-child) {
       margin-left: 2px;

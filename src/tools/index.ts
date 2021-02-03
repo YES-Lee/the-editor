@@ -11,7 +11,7 @@ import { InsertImage } from './insert-image';
 import { Datetime } from './datetime';
 import { Table } from './table';
 
-export const builtinTools = new Map()
+export const builtinTools = new Map();
 
 builtinTools.set('undo', Undo);
 builtinTools.set('redo', Redo);

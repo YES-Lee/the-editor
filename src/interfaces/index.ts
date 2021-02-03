@@ -1,3 +1,3 @@
-export { ImageUploadAdaptor } from './image-upload-adaptor'
-export { Plugin } from './plugin'
-export { Tool } from './tool'
+export { ImageUploadAdaptor } from './image-upload-adaptor';
+export { Plugin } from './plugin';
+export { Tool } from './tool';

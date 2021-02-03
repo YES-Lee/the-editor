@@ -10,7 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "del dist/* && rollup -c rollup.config.js",
     "dev": "rollup -c rollup.config.dev.js -w",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "prettier": "prettier --write src/."
   },
   "keywords": [
     "markdown",
@@ -35,6 +36,7 @@
     "resize-observer-polyfill": "^1.5.1"
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "^11.0.0",
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
     "@types/codemirror": "0.0.104",
@@ -48,6 +50,7 @@
     "del-cli": "^3.0.1",
     "husky": "^4.3.8",
     "postcss": "^8.2.3",
+    "prettier": "^2.2.1",
     "rollup": "^2.33.3",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-postcss": "^4.0.0",
@@ -65,7 +68,8 @@
   },
   "husky": {
     "hooks": {
-    "commit-msg": "commitlint -e $GIT_PARAMS"
+      "commit-msg": "commitlint -e $GIT_PARAMS",
+      "pre-commit": "prettier --write --ignore-unknown src/."
     }
   }
 }

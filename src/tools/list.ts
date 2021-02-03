@@ -8,7 +8,7 @@ export class List implements Tool {
 
   constructor(name: string, type: 'ul' | 'ol') {
     this.name = name;
-    this.icon = 'list-' + type
+    this.icon = 'list-' + type;
 
     this.action = (editor: TheEditor) => {
       const cm = editor.$codemirror;
@@ -18,19 +18,21 @@ export class List implements Tool {
         if (type === 'ul') cm.replaceSelection('- ' + selection);
         if (type === 'ol') cm.replaceSelection('1. ' + selection);
       } else {
-        const selectionText = selection.split("\n");
+        const selectionText = selection.split('\n');
 
         for (let i = 0, len = selectionText.length; i < len; i++) {
           if (type === 'ul') {
-            selectionText[i] = (selectionText[i] === '') ? '' : '- ' + selectionText[i];
+            selectionText[i] =
+              selectionText[i] === '' ? '' : '- ' + selectionText[i];
           }
           if (type === 'ol') {
-            selectionText[i] = (selectionText[i] === '') ? '' : `${i + 1}. ` + selectionText[i];
+            selectionText[i] =
+              selectionText[i] === '' ? '' : `${i + 1}. ` + selectionText[i];
           }
         }
 
-        cm.replaceSelection(selectionText.join("\n"));
+        cm.replaceSelection(selectionText.join('\n'));
       }
-    }
+    };
   }
 }

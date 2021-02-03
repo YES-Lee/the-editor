@@ -9,7 +9,7 @@
   bottom: 0;
 
   &--body {
-    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
     border-radius: 2px;
     background-color: #fff;
     overflow: hidden;
@@ -19,7 +19,7 @@
   }
 
   &--header {
-    transition: background-color .2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
     user-select: none;
     padding: 12px 1rem;
     cursor: move;
@@ -39,7 +39,7 @@
       flex: none;
       color: #aaa;
       cursor: pointer;
-      transition: color .1s ease-in-out;
+      transition: color 0.1s ease-in-out;
       &:hover {
         color: blue;
       }
@@ -58,9 +58,9 @@
       outline: none;
       border: 1px solid #eee;
       border-radius: 2px;
-      padding: .5rem .8rem;
+      padding: 0.5rem 0.8rem;
       cursor: pointer;
-      transition: background-color .2s ease-in-out;
+      transition: background-color 0.2s ease-in-out;
 
       &:hover {
         background-color: #fafafa;

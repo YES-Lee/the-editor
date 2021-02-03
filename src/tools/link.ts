@@ -14,9 +14,9 @@ export const Link: Tool = {
         <label for="the_editor--tool_link--url" class="the_editor--label">链接地址</label>
         <input style="flex: auto;" id="the_editor--tool_link--url" class="the_editor--input" value="https://">
       </div>
-    `
-    const container = document.createElement('div')
-    container.innerHTML = template
+    `;
+    const container = document.createElement('div');
+    container.innerHTML = template;
     editor.openDialog({
       title: '添加链接',
       content: container,
@@ -24,14 +24,20 @@ export const Link: Tool = {
         {
           title: '确定',
           action: () => {
-            const title = container.querySelector<HTMLInputElement>('#the_editor--tool_link--title')?.value || ''
-            const url = container.querySelector<HTMLInputElement>('#the_editor--tool_link--url')?.value || ''
-            const str = `[${title || url}](${url})`
-            editor.$codemirror.replaceSelection(str)
-            editor.closeDialog()
-          }
-        }
-      ]
+            const title =
+              container.querySelector<HTMLInputElement>(
+                '#the_editor--tool_link--title'
+              )?.value || '';
+            const url =
+              container.querySelector<HTMLInputElement>(
+                '#the_editor--tool_link--url'
+              )?.value || '';
+            const str = `[${title || url}](${url})`;
+            editor.$codemirror.replaceSelection(str);
+            editor.closeDialog();
+          },
+        },
+      ],
     });
-  }
+  },
 };

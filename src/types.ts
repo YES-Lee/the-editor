@@ -9,7 +9,7 @@ export type Options = {
   plugins?: Plugin[];
   toolbar?: {
     visible: boolean;
-    items: Array<string | Tool>
+    items: Array<string | Tool>;
   };
 } & Record<string, any>;
 

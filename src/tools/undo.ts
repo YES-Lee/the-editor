@@ -6,5 +6,5 @@ export const Undo: Tool = {
   icon: 'undo',
   action: (editor: TheEditor) => {
     editor.$codemirror.execCommand('undo');
-  }
-}
+  },
+};

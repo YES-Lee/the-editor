@@ -7,6 +7,6 @@ export const Datetime: Tool = {
   action: (editor: TheEditor) => {
     const cm = editor.$codemirror;
     const date = new Date();
-    cm.replaceSelection(date.toLocaleString())
-  }
-}
+    cm.replaceSelection(date.toLocaleString());
+  },
+};

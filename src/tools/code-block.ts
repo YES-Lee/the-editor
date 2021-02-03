@@ -6,11 +6,11 @@ export const CodeBlock: Tool = {
   icon: 'file-code',
   action: (editor: TheEditor) => {
     const cm = editor.$codemirror;
-    const cursor = cm.getCursor()
-    const selection = cm.getSelection()
-    cm.replaceSelection('```\n' + selection + '\n```')
+    const cursor = cm.getCursor();
+    const selection = cm.getSelection();
+    cm.replaceSelection('```\n' + selection + '\n```');
     if (selection === '') {
-      cm.setCursor(cursor.line + 1, 0)
+      cm.setCursor(cursor.line + 1, 0);
     }
-  }
-}
+  },
+};

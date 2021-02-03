@@ -1,2 +1,2 @@
-export { Previewer } from './previewer'
-export { Toolbar } from './toolbar'
+export { Previewer } from './previewer';
+export { Toolbar } from './toolbar';

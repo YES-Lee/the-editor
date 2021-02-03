@@ -12,12 +12,12 @@ export class Enclose implements Tool {
 
     this.action = (editor: TheEditor) => {
       const cm = editor.$codemirror;
-      const cursor = cm.getCursor()
-      const selections = cm.getSelections()
-      cm.replaceSelections(selections.map(s => `${key}${s}${key}`))
+      const cursor = cm.getCursor();
+      const selections = cm.getSelections();
+      cm.replaceSelections(selections.map((s) => `${key}${s}${key}`));
       if (selections.length === 1) {
-        cm.setCursor(cursor.line, cursor.ch + key.length)
+        cm.setCursor(cursor.line, cursor.ch + key.length);
       }
-    }
+    };
   }
 }

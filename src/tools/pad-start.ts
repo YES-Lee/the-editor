@@ -14,8 +14,8 @@ export class PadStart implements Tool {
       const cm = editor.$codemirror;
       cm.replaceRange(key, {
         line: cm.getCursor().line,
-        ch: 0
-      })
-    }
+        ch: 0,
+      });
+    };
   }
 }

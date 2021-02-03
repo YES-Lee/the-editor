@@ -24,9 +24,9 @@ export const Table: Tool = {
         <input name="align" value="right" style="flex: auto;" type="radio" id="the_editor--tool_table--align_right" class="the_editor--input">
         <label for="the_editor--tool_table--align_right" class="the_editor--label fa fa-align-right"></label>
       </div>
-    `
+    `;
 
-    const container = document.createElement('form')
+    const container = document.createElement('form');
     container.innerHTML = template;
     editor.openDialog({
       title: '插入表格',
@@ -39,24 +39,24 @@ export const Table: Tool = {
               justify: '---',
               left: ':---',
               center: ':---:',
-              right: '---:'
-            }
-            const formData = new FormData(container)
+              right: '---:',
+            };
+            const formData = new FormData(container);
             const row = +formData.get('row')!;
             const column = +formData.get('column')!;
             const align = <string>formData.get('align')!;
-            const table: string[][] = new Array(row + 2)
-            table[0] = new Array(column).fill('标题')
-            table[1] = new Array(column).fill(alignTokens[align])
+            const table: string[][] = new Array(row + 2);
+            table[0] = new Array(column).fill('标题');
+            table[1] = new Array(column).fill(alignTokens[align]);
             for (let i = 2; i < column + 2; i++) {
-              table[i] = new Array(column).fill('  ')
+              table[i] = new Array(column).fill('  ');
             }
-            const tableStr = table.map(r => `|${r.join('|')}|`).join('\n')
-            editor.$codemirror.replaceSelection(tableStr)
+            const tableStr = table.map((r) => `|${r.join('|')}|`).join('\n');
+            editor.$codemirror.replaceSelection(tableStr);
             editor.closeDialog();
-          }
-        }
-      ]
-    })
-  }
-}
+          },
+        },
+      ],
+    });
+  },
+};

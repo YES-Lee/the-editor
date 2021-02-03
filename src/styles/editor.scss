@@ -28,17 +28,17 @@
 }
 
 .the_editor--label {
-  opacity: .8;
+  opacity: 0.8;
   margin-right: 6px;
   cursor: pointer;
 
   &_file_input {
     display: inline-block;
-    padding: .5rem .8rem;
+    padding: 0.5rem 0.8rem;
     border-radius: 2px;
     border: 1px solid #eee;
     cursor: pointer;
-    transition: background-color .2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
     font-size: 14px;
 
     &:hover {
@@ -52,12 +52,12 @@
 }
 
 .the_editor--input {
-  opacity: .8;
-  padding: .5rem .8rem;
+  opacity: 0.8;
+  padding: 0.5rem 0.8rem;
   outline: none;
   border-radius: 2px;
   border: 1px solid #eee;
-  &[type="radio"] {
+  &[type='radio'] {
     cursor: pointer;
   }
 }

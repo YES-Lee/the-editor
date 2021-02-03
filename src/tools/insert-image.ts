@@ -18,29 +18,35 @@ export const InsertImage: Tool = {
         <label for="the_editor--tool_image--file_input" class="the_editor--label_file_input">上传图片</label>
         <input id="the_editor--tool_image--file_input" style="display: none;" type="file" accept="image/*" >
       </div>
-    `
+    `;
 
-    const container = document.createElement('div')
-    container.innerHTML = template
-    const imageDesInput = container.querySelector<HTMLInputElement>('#the_editor--tool_image--des')!
-    const imageUrlInput = container.querySelector<HTMLInputElement>('#the_editor--tool_image--url')!
-    const fileInput = container.querySelector<HTMLInputElement>('#the_editor--tool_image--file_input')!;
+    const container = document.createElement('div');
+    container.innerHTML = template;
+    const imageDesInput = container.querySelector<HTMLInputElement>(
+      '#the_editor--tool_image--des'
+    )!;
+    const imageUrlInput = container.querySelector<HTMLInputElement>(
+      '#the_editor--tool_image--url'
+    )!;
+    const fileInput = container.querySelector<HTMLInputElement>(
+      '#the_editor--tool_image--file_input'
+    )!;
     fileInput.addEventListener('input', () => {
       const adaptor = editor.options.imageUploadAdaptor;
       if (typeof adaptor?.upload !== 'function') {
-        window.alert('没有imageUploadAdaptor！')
+        window.alert('没有imageUploadAdaptor！');
         return;
       }
-      const file = fileInput.files![0]
-      const res = adaptor.upload([file])
+      const file = fileInput.files![0];
+      const res = adaptor.upload([file]);
       if (res instanceof Promise) {
-        res.then(urls => {
-          imageUrlInput.value = urls[0]
-        })
+        res.then((urls) => {
+          imageUrlInput.value = urls[0];
+        });
       } else {
-        imageUrlInput.value = res[0]
+        imageUrlInput.value = res[0];
       }
-    })
+    });
     editor.openDialog({
       title: '插入图片',
       content: container,
@@ -49,11 +55,13 @@ export const InsertImage: Tool = {
           title: '确定',
           action: () => {
             const cm = editor.$codemirror;
-            cm.replaceSelection(`![${imageDesInput.value}](${imageUrlInput.value})`)
+            cm.replaceSelection(
+              `![${imageDesInput.value}](${imageUrlInput.value})`
+            );
             editor.closeDialog();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
-  }
-}
+  },
+};
