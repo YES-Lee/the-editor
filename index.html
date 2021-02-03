@@ -4,9 +4,13 @@
     <meta charset="UTF-8" />
     <title>The Editor</title>
     <link rel="stylesheet" href="the-editor.css" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=1"
+    />
   </head>
   <body>
-    <div style="margin: 90px auto 0; text-align: center;">
+    <div style="margin: 90px auto 0; text-align: center">
       <button id="btn-get-markdown">获取Markdown</button>
       <button id="btn-get-html" style="margin-left: 10px">获取HTML</button>
       <button id="btn-get-toc" style="margin-left: 10px">获取TOC</button>
@@ -203,36 +207,36 @@ Reference-style:
     </div>
     <script src="the-editor.js"></script>
     <script>
-      (function() {
-        window.onload = function() {
-          var container = document.getElementById("editor");
+      (function () {
+        window.onload = function () {
+          var container = document.getElementById('editor');
           var editor = new TheEditor(container, {
-            value: document.getElementById("md").innerText,
+            value: document.getElementById('md').innerText,
             lineNumbers: true,
             imageUploadAdaptor: {
               upload(files) {
                 return new Promise((res) => {
                   setTimeout(() => {
-                    res(files.map(f => URL.createObjectURL(f)));
+                    res(files.map((f) => URL.createObjectURL(f)));
                   }, 1000);
                 });
               },
             },
           });
 
-          var getMarkdownButton = document.getElementById('btn-get-markdown')
-          var getHTMLButton = document.getElementById('btn-get-html')
-          var getTOCButton = document.getElementById('btn-get-toc')
+          var getMarkdownButton = document.getElementById('btn-get-markdown');
+          var getHTMLButton = document.getElementById('btn-get-html');
+          var getTOCButton = document.getElementById('btn-get-toc');
 
           getMarkdownButton.addEventListener('click', () => {
-            window.alert(editor.getValue())
-          })
+            window.alert(editor.getValue());
+          });
           getHTMLButton.addEventListener('click', () => {
-            window.alert(editor.getHTML())
-          })
+            window.alert(editor.getHTML());
+          });
           getTOCButton.addEventListener('click', () => {
-            window.alert(JSON.stringify(editor.getTOC(), null, 2))
-          })
+            window.alert(JSON.stringify(editor.getTOC(), null, 2));
+          });
         };
       })();
     </script>
