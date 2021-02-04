@@ -17,9 +17,9 @@
     min-width: 400px;
     position: fixed;
     transition-property: opacity, transform;
-    transition-duration: .1s;
+    transition-duration: 0.1s;
     transition-timing-function: ease-in-out;
-    transform: scale(.8);
+    transform: scale(0.8);
     opacity: 0;
 
     &.active {

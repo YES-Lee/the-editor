@@ -20,8 +20,8 @@ export class Dialog {
     this.dialog = this.create();
     this.container.appendChild(this.dialog);
     document.body.appendChild(this.container);
-    this.dialog.scrollTop
-    this.dialog.classList.add('active')
+    this.dialog.scrollTop;
+    this.dialog.classList.add('active');
 
     const rect = this.dialog.getBoundingClientRect();
     this.dialog.style.left = `${(window.innerWidth - rect.width) / 2}px`;
@@ -129,10 +129,10 @@ export class Dialog {
 
   close() {
     const remove = () => {
-      document.body.removeChild(this.container)
-      this.dialog.removeEventListener('transitionend', remove)
+      document.body.removeChild(this.container);
+      this.dialog.removeEventListener('transitionend', remove);
     };
-    this.dialog.addEventListener('transitionend', remove)
-    this.dialog.classList.remove('active')
+    this.dialog.addEventListener('transitionend', remove);
+    this.dialog.classList.remove('active');
   }
 }
