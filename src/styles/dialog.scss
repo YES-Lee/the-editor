@@ -16,6 +16,16 @@
     width: fit-content;
     min-width: 400px;
     position: fixed;
+    transition-property: opacity, transform;
+    transition-duration: .1s;
+    transition-timing-function: ease-in-out;
+    transform: scale(.8);
+    opacity: 0;
+
+    &.active {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
   &--header {
